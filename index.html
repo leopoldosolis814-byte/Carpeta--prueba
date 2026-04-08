@@ -40,7 +40,7 @@
             border-radius: 2px; overflow: hidden;
         }
 
-        .barra-relleno { height: 100%; width: 0%; background: #FF2D7C; }
+        .barra-relleno { height: 100%; width: 0%; background: #FF2D7C; transition: width 0.1s linear; }
         .barra-seg.activa .barra-relleno { background: #FFD600; }
         .barra-seg.completa .barra-relleno { width: 100% !important; background: #FF2D7C; }
 
@@ -51,6 +51,7 @@
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
             gap: 14px; z-index: 20; cursor: pointer;
+            opacity: 1; transition: opacity 0.4s;
         }
 
         .play-circle {
@@ -71,7 +72,6 @@
 
         .play-overlay.oculto {
             opacity: 0; pointer-events: none;
-            transition: opacity 0.4s;
         }
 
         @keyframes pulso {
@@ -88,10 +88,7 @@
             border-radius: 24px;
             padding: 12px 16px 12px;
             z-index: 15;
-            box-shadow:
-                0 8px 32px rgba(0,0,0,0.25),
-                0 2px 8px rgba(0,0,0,0.15);
-            /* Animación de entrada */
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
             animation: subir 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
         }
 
@@ -100,15 +97,6 @@
             to   { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        .burbuja.cambiando {
-            animation: bajar 0.25s ease forwards;
-        }
-
-        @keyframes bajar {
-            to { opacity: 0; transform: translateY(12px) scale(0.97); }
-        }
-
-        /* Pill */
         .pill {
             display: inline-flex; align-items: center; gap: 6px;
             background: #fff0f5; border: 1.5px solid #FFD6E8;
@@ -127,7 +115,6 @@
             0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
         }
 
-        /* Título */
         .titulo {
             font-family: 'Syne', sans-serif;
             font-size: 18px; font-weight: 800; color: #111;
@@ -135,19 +122,16 @@
             margin-bottom: 4px; line-height: 1.2;
         }
 
-        /* Línea color */
         .linea {
             width: 32px; height: 4px; border-radius: 2px;
             margin-bottom: 6px;
         }
 
-        /* Descripción */
         .desc {
+            font-family: 'DM Sans', sans-serif;
             font-size: 13px; line-height: 1.5; color: #555;
             margin-bottom: 10px;
         }
-
-        
     </style>
 </head>
 <body>
@@ -158,25 +142,21 @@
 
     <div class="barras" id="barras"></div>
 
-    <div class="play-overlay oculto" id="playOverlay">
+    <div class="play-overlay" id="playOverlay">
         <div class="play-circle">▶</div>
         <span>Empezar tutorial</span>
     </div>
 
     <div class="burbuja" id="burbuja">
-
         <div class="pill">
             <span class="pill-dot"></span>
             <span id="labelPaso">Paso 1 de 7</span>
         </div>
-
         <div class="titulo">
             <span id="emoji">📱</span>
             <span id="titulo">Notificación</span>
         </div>
-
         <div class="linea" id="linea" style="background:#25D366"></div>
-
         <p class="desc" id="desc">
             Recibís el pack del mes con todo el contenido listo para publicar por WhatsApp.
         </p>
@@ -184,20 +164,22 @@
 
 <script>
     const vid = document.getElementById('vid');
+    const playOverlay = document.getElementById('playOverlay');
+    const burbuja = document.getElementById('burbuja');
 
     const pasos = [
-        { t: 0,  e: '📱', titulo: 'Notificación', desc: 'Recibís el pack del mes con todo el contenido listo para publicar por WhatsApp.',            color: '#25D366' },
-        { t: 8,  e: '👆', titulo: 'Selección',    desc: 'Entrás al link del pack y elegís el contenido de la semana para tu negocio.',                color: '#0088cc' },
-        { t: 16, e: '🧲', titulo: 'El Gancho',    desc: 'Elegís la imagen o video que más se adapte a tu oferta del día.',                            color: '#FF9900' },
-        { t: 24, e: '⬇️', titulo: 'Preparación', desc: 'Descargás el material y copiás tu enlace de venta personalizado del micro-landing.',          color: '#FF2D7C' },
-        { t: 34, e: '🔗', titulo: 'Vinculación',  desc: 'Subís la historia a Instagram y pegás el enlace en el sticker de link.',                      color: '#E1306C' },
-        { t: 48, e: '📢', titulo: 'Publicación',  desc: '¡Listo! Tu historia ya está publicada y trabajando para atraer clientes.',                    color: '#833AB4' },
-        { t: 58, e: '💰', titulo: '¡Venta!',      desc: 'El cliente ve tu historia, hace clic y te escribe directo al WhatsApp para comprar.',         color: '#FFD600' },
+        { t: 0,  e: '📱', titulo: 'Notificación', desc: 'Recibís el pack del mes con todo el contenido listo para publicar por WhatsApp.', color: '#25D366' },
+        { t: 8,  e: '👆', titulo: 'Selección',    desc: 'Entrás al link del pack y elegís el contenido de la semana para tu negocio.', color: '#0088cc' },
+        { t: 16, e: '🧲', titulo: 'El Gancho',    desc: 'Elegís la imagen o video que más se adapte a tu oferta del día.', color: '#FF9900' },
+        { t: 24, e: '⬇️', titulo: 'Preparación', desc: 'Descargás el material y copiás tu enlace de venta personalizado del micro-landing.', color: '#FF2D7C' },
+        { t: 34, e: '🔗', titulo: 'Vinculación',  desc: 'Subís la historia a Instagram y pegás el enlace en el sticker de link.', color: '#E1306C' },
+        { t: 48, e: '📢', titulo: 'Publicación',  desc: '¡Listo! Tu historia ya está publicada y trabajando para atraer clientes.', color: '#833AB4' },
+        { t: 58, e: '💰', titulo: '¡Venta!',      desc: 'El cliente ve tu historia, hace clic y te escribe directo al WhatsApp para comprar.', color: '#FFD600' },
     ];
 
     let actual = 0;
 
-    // Crear barras
+    // Crear barras dinámicamente
     const barrasCont = document.getElementById('barras');
     pasos.forEach(() => {
         const s = document.createElement('div');
@@ -206,42 +188,66 @@
         barrasCont.appendChild(s);
     });
 
-    function iniciar() {
-        document.getElementById('playOverlay').classList.add('oculto');
-        vid.play().catch(() => {});
-    }
-
     function actualizarPanel(i) {
         const p = pasos[i];
-        document.getElementById('labelPaso').textContent = `Paso ${i + 1} de ${pasos.length}`;
-        document.getElementById('emoji').textContent = p.e;
-        document.getElementById('titulo').textContent = p.titulo;
-        document.getElementById('desc').textContent = p.desc;
-        document.getElementById('linea').style.background = p.color;
+        
+        // Animación simple de salida/entrada de texto
+        burbuja.style.opacity = 0.5;
+        
+        setTimeout(() => {
+            document.getElementById('labelPaso').textContent = `Paso ${i + 1} de ${pasos.length}`;
+            document.getElementById('emoji').textContent = p.e;
+            document.getElementById('titulo').textContent = p.titulo;
+            document.getElementById('desc').textContent = p.desc;
+            document.getElementById('linea').style.background = p.color;
+            burbuja.style.opacity = 1;
+        }, 100);
     }
-    }
+
+    // Evento para iniciar el video
+    playOverlay.addEventListener('click', () => {
+        playOverlay.classList.add('oculto');
+        vid.play();
+    });
 
     vid.addEventListener('timeupdate', () => {
         const t = vid.currentTime;
         const barras = document.querySelectorAll('.barra-seg');
+        
         pasos.forEach((p, i) => {
-            const nextT = pasos[i + 1] ? pasos[i + 1].t : (vid.duration || 999);
+            const nextT = pasos[i + 1] ? pasos[i + 1].t : vid.duration;
             const relleno = barras[i].querySelector('.barra-relleno');
+            
             barras[i].classList.remove('activa', 'completa');
-            if (t >= nextT) {
+            
+            if (t >= nextT && nextT !== 0) {
                 barras[i].classList.add('completa');
+                relleno.style.width = '100%';
             } else if (t >= p.t) {
                 barras[i].classList.add('activa');
-                relleno.style.width = ((t - p.t) / (nextT - p.t) * 100) + '%';
-                if (actual !== i) { actual = i; actualizarPanel(i); }
+                let progreso = ((t - p.t) / (nextT - p.t) * 100);
+                relleno.style.width = progreso + '%';
+                
+                if (actual !== i) { 
+                    actual = i; 
+                    actualizarPanel(i); 
+                }
             } else {
                 relleno.style.width = '0%';
             }
         });
     });
 
-    actualizarPanel(0);
-    vid.play().catch(() => {});
+    // Intentar play automático (silenciado suele funcionar)
+    window.addEventListener('load', () => {
+        actualizarPanel(0);
+        vid.play().then(() => {
+            playOverlay.classList.add('oculto');
+        }).catch(() => {
+            // Si el navegador bloquea el autoplay, el overlay queda visible para que el usuario haga click
+            console.log("Autoplay bloqueado, esperando interacción.");
+        });
+    });
 </script>
 </body>
 </html>
