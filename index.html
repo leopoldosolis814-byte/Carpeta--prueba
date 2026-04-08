@@ -3,177 +3,247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Story2Action - Explicativo</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <title>Masterclass Story2Action</title>
     <style>
-        :root {
-            --primary: #ff0057;
-            --accent: #00ff88;
-            --dark: #000000;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            background-color: var(--dark);
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            overflow: hidden;
-            color: white;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        .container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
+        body {
+            background: #0f0f1a;
             display: flex;
             justify-content: center;
             align-items: center;
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            color: white;
+            overflow: hidden;
         }
 
-        /* Estilo del Video */
+        .phone-mockup {
+            position: relative;
+            width: 100%;
+            max-width: 390px;
+            height: 85vh;
+            background: #000;
+            border-radius: 40px;
+            border: 8px solid #222;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        }
+
         video {
-            height: 90vh;
-            border-radius: 20px;
-            box-shadow: 0 0 30px rgba(255, 0, 87, 0.3);
-            border: 2px solid #333;
-        }
-
-        /* Capas de Texto */
-        .overlay {
-            position: absolute;
-            top: 15%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
-            text-align: center;
-            z-index: 10;
-            pointer-events: none;
-        }
-
-        .step-text {
-            display: none;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 15px 20px;
-            border-radius: 12px;
-            border-left: 5px solid var(--primary);
-            font-size: 1.2rem;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
-        }
-
-        /* Flechas y Marcadores */
-        .pointer {
-            position: absolute;
-            display: none;
-            z-index: 11;
-            color: var(--accent);
-            font-size: 3rem;
-            filter: drop-shadow(0 0 10px var(--accent));
-        }
-
-        /* Barra de progreso visual */
-        .progress-container {
-            position: absolute;
-            bottom: 20px;
-            width: 60%;
-            height: 6px;
-            background: #333;
-            border-radius: 10px;
-        }
-
-        #progress-bar {
-            width: 0%;
+            width: 100%;
             height: 100%;
-            background: var(--primary);
-            border-radius: 10px;
-            transition: width 0.1s linear;
+            object-fit: cover;
         }
 
-        @media (max-width: 600px) {
-            video { height: 100vh; border-radius: 0; border: none; }
-            .step-text { font-size: 1rem; width: 90%; }
+        /* OVERLAYS */
+        .instruction-card {
+            position: absolute;
+            left: 20px;
+            right: 20px;
+            background: rgba(15, 15, 26, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 20px;
+            border-top: 3px solid #ff0057;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.5s ease;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .instruction-card.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .top-card { top: 30px; }
+        .bottom-card { bottom: 80px; }
+
+        .instruction-card h4 {
+            color: #ff0057;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .instruction-card p {
+            font-size: 14px;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        /* INDICADORES */
+        .step-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ff0057;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 900;
+            font-size: 12px;
+            z-index: 101;
+        }
+
+        .mute-control {
+            position: absolute;
+            bottom: 25px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 102;
+            font-size: 18px;
+        }
+
+        /* BARRA DE PROGRESO SUPERIOR */
+        .timeline {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            z-index: 105;
+        }
+
+        #progress {
+            height: 100%;
+            background: #ff0057;
+            width: 0%;
+        }
+
+        /* FLECHA DINAMICA */
+        #dynamic-arrow {
+            position: absolute;
+            font-size: 40px;
+            z-index: 110;
+            display: none;
+            filter: drop-shadow(0 0 10px #ff0057);
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <video id="mainVideo" muted playsinline>
+<div class="phone-mockup">
+    <div class="timeline"><div id="progress"></div></div>
+    <div class="step-badge" id="stepCounter">PASO 1 / 7</div>
+    
+    <video id="vid" muted playsinline loop>
         <source src="https://res.cloudinary.com/ds2udm1nc/video/upload/v1775641154/XRecorder_20260408_01_3_erklpv.mp4" type="video/mp4">
     </video>
 
-    <div class="overlay">
-        <div id="step1" class="step-text animate__animated">🚀 Recibí tu Pack del Mes por WhatsApp</div>
-        <div id="step2" class="step-text animate__animated">🧠 Elegí creativos diseñados con IA para impactar</div>
-        <div id="step3" class="step-text animate__animated">🔗 Copiá tu enlace de venta personalizado</div>
-        <div id="step4" class="step-text animate__animated">📸 Subilo a Instagram y agregá el sticker</div>
-        <div id="step5" class="step-text animate__animated">💰 ¡Listo! Recibí pedidos directo a tu WhatsApp</div>
+    <div id="card1" class="instruction-card bottom-card">
+        <h4>Notificación Directa</h4>
+        <p>📱 Recibí tu pack estratégico cada mes directamente por WhatsApp. ¡Hacé clic en el link para empezar!</p>
     </div>
 
-    <div id="arrow" class="pointer animate__animated animate__bounceIn">⬇️</div>
-
-    <div class="progress-container">
-        <div id="progress-bar"></div>
+    <div id="card2" class="instruction-card top-card">
+        <h4>Catálogo Inteligente</h4>
+        <p>🧠 Elegí entre piezas diseñadas para romper el scroll. Usamos psicología visual e IA.</p>
     </div>
+
+    <div id="card3" class="instruction-card bottom-card">
+        <h4>Tu Link de Venta</h4>
+        <p>🔗 Este es el paso clave: Copiá el enlace de tu botón para que el pedido llegue a TU WhatsApp.</p>
+    </div>
+
+    <div id="card4" class="instruction-card top-card">
+        <h4>Subí tu Story</h4>
+        <p>📸 Abrí Instagram y seleccioná la imagen que descargaste. ¡Es hora de mostrar el producto!</p>
+    </div>
+
+    <div id="card5" class="instruction-card bottom-card">
+        <h4>Pegá el Sticker</h4>
+        <p>🔗 Buscá el sticker de "Enlace", pegá la URL y ponele un texto llamativo como "PEDIR AHORA".</p>
+    </div>
+
+    <div id="card6" class="instruction-card top-card">
+        <h4>Publicación Exitosa</h4>
+        <p>✨ Ubicá el sticker en un lugar cómodo para el pulgar y compartí la historia.</p>
+    </div>
+
+    <div id="card7" class="instruction-card bottom-card">
+        <h4>¡Venta Confirmada!</h4>
+        <p>💰 El cliente toca el link, ve tu promo y te manda el mensaje de pedido automático.</p>
+    </div>
+
+    <div id="dynamic-arrow">👇</div>
+
+    <div class="mute-control" onclick="toggleMute()" id="muteBtn">🔇</div>
 </div>
 
 <script>
-    const video = document.getElementById('mainVideo');
-    const progressBar = document.getElementById('progress-bar');
-    const arrow = document.getElementById('arrow');
+    const v = document.getElementById('vid');
+    const progress = document.getElementById('progress');
+    const stepCounter = document.getElementById('stepCounter');
+    const arrow = document.getElementById('dynamic-arrow');
+    const muteBtn = document.getElementById('muteBtn');
 
-    // Configuración de los tiempos (en segundos)
+    // CONFIGURACIÓN: Ralentizamos el video al 70%
+    v.playbackRate = 0.7;
+
+    // Arrancamos el video apenas cargue
+    window.addEventListener('load', () => {
+        v.play();
+    });
+
+    function toggleMute() {
+        v.muted = !v.muted;
+        muteBtn.innerHTML = v.muted ? '🔇' : '🔊';
+    }
+
     const script = [
-        { start: 0, end: 4, id: 'step1', arrow: null },
-        { start: 5, end: 12, id: 'step2', arrow: null },
-        { start: 17, end: 23, id: 'step3', arrow: { top: '80%', left: '30%' } },
-        { start: 35, end: 50, id: 'step4', arrow: { top: '45%', left: '50%' } },
-        { start: 110, end: 132, id: 'step5', arrow: { top: '85%', left: '50%' } }
+        { start: 0, end: 7, card: 'card1', step: 1, arrow: null },
+        { start: 7, end: 18, card: 'card2', step: 2, arrow: null },
+        { start: 18, end: 32, card: 'card3', step: 3, arrow: { t: '82%', l: '25%' } },
+        { start: 32, end: 55, card: 'card4', step: 4, arrow: null },
+        { start: 55, end: 85, card: 'card5', step: 5, arrow: { t: '42%', l: '45%' } },
+        { start: 85, end: 110, card: 'card6', step: 6, arrow: null },
+        { start: 110, end: 132, card: 'card7', step: 7, arrow: null }
     ];
 
-    video.addEventListener('timeupdate', () => {
-        const currentTime = video.currentTime;
+    v.addEventListener('timeupdate', () => {
+        const now = v.currentTime;
         
-        // Actualizar barra de progreso
-        const progress = (currentTime / video.duration) * 100;
-        progressBar.style.width = progress + "%";
+        // Progreso
+        progress.style.width = (now / v.duration) * 100 + '%';
 
-        // Lógica de textos y flechas
-        script.forEach(step => {
-            const el = document.getElementById(step.id);
-            if (currentTime >= step.start && currentTime <= step.end) {
-                if (el.style.display !== 'block') {
-                    el.style.display = 'block';
-                    el.classList.add('animate__fadeInUp');
-                }
+        // Lógica de Pasos
+        script.forEach(s => {
+            const card = document.getElementById(s.card);
+            if (now >= s.start && now < s.end) {
+                card.classList.add('active');
+                stepCounter.innerText = `PASO ${s.step} / 7`;
                 
-                // Mostrar flecha si existe posición definida
-                if (step.arrow) {
+                if(s.arrow) {
                     arrow.style.display = 'block';
-                    arrow.style.top = step.arrow.top;
-                    arrow.style.left = step.arrow.left;
+                    arrow.style.top = s.arrow.t;
+                    arrow.style.left = s.arrow.l;
                 } else {
                     arrow.style.display = 'none';
                 }
             } else {
-                if (el.style.display === 'block') {
-                    el.classList.remove('animate__fadeInUp');
-                    el.classList.add('animate__fadeOut');
-                    setTimeout(() => { 
-                        el.style.display = 'none'; 
-                        el.classList.remove('animate__fadeOut');
-                    }, 500);
-                }
+                card.classList.remove('active');
             }
         });
     });
-
-    // Iniciar video al hacer click (por políticas de navegadores)
-    document.body.addEventListener('click', () => {
-        video.play();
-    }, { once: true });
-
 </script>
 
 </body>
