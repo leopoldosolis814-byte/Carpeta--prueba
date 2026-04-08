@@ -3,630 +3,292 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tutorial Story2Action</title>
+    <title>Story2Action Tutorial</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;700&display=swap');
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background: #0f0f0f;
+            background: #050505;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             font-family: 'DM Sans', sans-serif;
+            color: white;
         }
 
         .phone-frame {
             position: relative;
-            width: 380px;
-            height: 800px;
+            width: 360px;
+            height: 740px;
             background: #000;
-            border-radius: 44px;
+            border-radius: 40px;
             overflow: hidden;
-            border: 8px solid #1a1a1a;
-            box-shadow:
-                0 0 0 1px #333,
-                0 30px 80px rgba(0,0,0,0.8),
-                inset 0 0 0 1px #111;
+            border: 10px solid #1a1a1a;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
         video {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            display: block;
         }
 
-        /* ─── BARRA DE PROGRESO SUPERIOR ─── */
-        .progress-bar-container {
+        /* BARRA DE PROGRESO */
+        .header-ui {
             position: absolute;
             top: 0; left: 0; right: 0;
-            z-index: 20;
-            padding: 18px 20px 12px;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, transparent 100%);
+            padding: 25px 20px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+            z-index: 30;
         }
 
-        .progress-label {
+        .progress-segments {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
+            gap: 5px;
+            margin-bottom: 10px;
         }
 
-        .progress-label .brand {
-            font-family: 'Syne', sans-serif;
-            font-size: 11px;
-            font-weight: 800;
-            color: #FF2D7C;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-        }
-
-        .progress-label .step-count {
-            font-size: 11px;
-            font-weight: 600;
-            color: rgba(255,255,255,0.5);
-            letter-spacing: 0.5px;
-        }
-
-        .progress-track {
+        .segment {
+            flex: 1;
             height: 3px;
-            background: rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.2);
             border-radius: 2px;
             overflow: hidden;
         }
 
-        .progress-fill {
+        .segment-fill {
             height: 100%;
-            background: linear-gradient(90deg, #FF2D7C, #FFD600);
-            border-radius: 2px;
-            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             width: 0%;
-        }
-
-        /* Segmentos de progreso */
-        .progress-dots {
-            display: flex;
-            gap: 4px;
-            margin-top: 6px;
-        }
-
-        .progress-dots span {
-            flex: 1;
-            height: 3px;
-            background: rgba(255,255,255,0.15);
-            border-radius: 2px;
-            transition: background 0.4s ease;
-        }
-
-        .progress-dots span.done {
             background: #FF2D7C;
+            transition: width 0.1s linear;
         }
 
-        .progress-dots span.current {
-            background: #FFD600;
-        }
+        .segment.active .segment-fill { background: #FFD600; }
+        .segment.complete .segment-fill { width: 100%; background: #FF2D7C; }
 
-        /* ─── OVERLAY OSCURO DE FONDO ─── */
-        .dim-overlay {
+        /* TARJETA DE PASO (TIPO OVERLAY INFERIOR) */
+        .step-overlay {
             position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0);
-            z-index: 8;
-            transition: background 0.4s ease;
-            pointer-events: none;
+            bottom: 0; left: 0; right: 0;
+            padding: 30px 20px 40px;
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 70%, transparent);
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+            z-index: 40;
         }
 
-        .dim-overlay.active {
-            background: rgba(0, 0, 0, 0.55);
-        }
+        .step-overlay.active { transform: translateY(0); }
 
-        /* ─── CAJA DE PASO ─── */
-        .step-card {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%) scale(0.92);
-            width: calc(100% - 32px);
-            background: rgba(12, 12, 12, 0.92);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 20px;
-            padding: 24px 22px 20px;
-            z-index: 15;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-        }
-
-        .step-card.active {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-            pointer-events: all;
-        }
-
-        /* Número grande de paso */
-        .step-number {
+        .step-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #FF2D7C;
+            border-radius: 6px;
             font-family: 'Syne', sans-serif;
-            font-size: 72px;
+            font-size: 10px;
             font-weight: 800;
-            line-height: 1;
-            margin-bottom: 12px;
-            background: linear-gradient(135deg, #FF2D7C, #FFD600);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            opacity: 0.25;
-            position: absolute;
-            top: 12px;
-            right: 18px;
-        }
-
-        .step-icon-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            text-transform: uppercase;
             margin-bottom: 10px;
         }
 
-        .step-icon {
-            font-size: 22px;
-            line-height: 1;
-        }
-
-        .step-card h3 {
+        .step-title {
             font-family: 'Syne', sans-serif;
-            font-size: 16px;
-            font-weight: 700;
-            color: #fff;
-            letter-spacing: 0.2px;
+            font-size: 20px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .step-card p {
+        .step-desc {
             font-size: 14px;
-            line-height: 1.6;
-            color: rgba(255,255,255,0.65);
-            padding-right: 30px;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.5;
         }
 
-        /* Línea de acento */
-        .step-accent {
-            width: 32px;
-            height: 3px;
-            border-radius: 2px;
-            margin-bottom: 14px;
-            margin-top: 4px;
-        }
-
-        /* ─── BOTÓN SIGUIENTE ─── */
-        .btn-next {
+        /* CONTROLES */
+        .controls {
+            position: absolute;
+            top: 50%; left: 0; right: 0;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 18px;
-            width: 100%;
-            padding: 12px 20px;
-            background: linear-gradient(135deg, #FF2D7C, #c4005e);
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            letter-spacing: 0.3px;
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
-            box-shadow: 0 4px 20px rgba(255, 45, 124, 0.35);
-        }
-
-        .btn-next:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 8px 28px rgba(255, 45, 124, 0.5);
-        }
-
-        .btn-next:active {
-            transform: scale(0.97);
-        }
-
-        .btn-next .arrow {
-            font-size: 16px;
-            transition: transform 0.2s ease;
-        }
-
-        .btn-next:hover .arrow {
-            transform: translateX(3px);
-        }
-
-        /* Último paso: botón diferente */
-        .btn-next.finish {
-            background: linear-gradient(135deg, #25D366, #1aad50);
-            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.35);
-        }
-
-        /* ─── TEMPORIZADOR CIRCULAR ─── */
-        .timer-ring {
-            position: absolute;
-            bottom: 18px;
-            right: 18px;
-            width: 36px;
-            height: 36px;
+            justify-content: space-between;
+            padding: 0 10px;
             z-index: 25;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .timer-ring.visible {
-            opacity: 1;
-        }
-
-        .timer-ring svg {
-            transform: rotate(-90deg);
-        }
-
-        .timer-ring circle {
-            fill: none;
-            stroke: rgba(255,255,255,0.1);
-            stroke-width: 3;
-        }
-
-        .timer-ring .progress-ring {
-            stroke: #FFD600;
-            stroke-linecap: round;
-            stroke-dasharray: 88;
-            stroke-dashoffset: 88;
-            transition: stroke-dashoffset 0.1s linear;
-        }
-
-        .timer-ring .timer-text {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Syne', sans-serif;
-            font-size: 11px;
-            font-weight: 700;
-            color: #FFD600;
-        }
-
-        /* ─── INDICADOR DE PAUSA ─── */
-        .pause-chip {
-            position: absolute;
-            top: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(255, 214, 0, 0.15);
-            border: 1px solid rgba(255, 214, 0, 0.3);
-            color: #FFD600;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            z-index: 25;
-            opacity: 0;
-            transition: opacity 0.3s;
             pointer-events: none;
-            white-space: nowrap;
         }
 
-        .pause-chip.show { opacity: 1; }
+        .nav-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
+            border: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            pointer-events: all;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
 
-        /* ─── TOUCH TO START ─── */
-        .touch-start {
+        .phone-frame:hover .nav-btn { opacity: 1; }
+
+        /* PANTALLA INICIAL */
+        .welcome-screen {
             position: absolute;
             inset: 0;
-            background: rgba(0,0,0,0.7);
-            z-index: 50;
+            background: #000;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 16px;
-            cursor: pointer;
+            z-index: 100;
+            text-align: center;
+            padding: 20px;
         }
 
-        .touch-start .logo {
-            font-family: 'Syne', sans-serif;
-            font-size: 22px;
-            font-weight: 800;
-            color: #fff;
-        }
-
-        .touch-start .logo span {
-            color: #FF2D7C;
-        }
-
-        .touch-start .play-btn {
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, #FF2D7C, #FFD600);
+        .play-trigger {
+            width: 80px;
+            height: 80px;
+            background: #FF2D7C;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 0 40px rgba(255, 45, 124, 0.5);
-            animation: pulse 2s infinite;
+            font-size: 30px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            box-shadow: 0 0 30px rgba(255, 45, 124, 0.4);
         }
 
-        .touch-start p {
-            font-size: 13px;
-            color: rgba(255,255,255,0.5);
-        }
-
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 20px rgba(255,45,124,0.5); }
-            50% { box-shadow: 0 0 50px rgba(255,45,124,0.8); }
-        }
-
-        .touch-start.hidden {
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s ease;
-        }
     </style>
 </head>
 <body>
 
 <div class="phone-frame">
+    <div class="welcome-screen" id="welcome">
+        <div class="play-trigger" onclick="startTutorial()">▶</div>
+        <h2 style="font-family:'Syne'">Story2Action</h2>
+        <p style="font-size: 14px; opacity: 0.6; margin-top: 10px">Mirá cómo vender más en 60 segundos</p>
+    </div>
 
-    <video id="video" muted playsinline loop>
+    <div class="header-ui">
+        <div class="progress-segments" id="progressSegments"></div>
+        <div style="font-size: 10px; opacity: 0.5; font-weight: bold; letter-spacing: 1px" id="stepIndicator">PASO 1 / 7</div>
+    </div>
+
+    <video id="tutoVideo" playsinline>
         <source src="https://res.cloudinary.com/ds2udm1nc/video/upload/v1775641154/XRecorder_20260408_01_3_erklpv.mp4" type="video/mp4">
     </video>
 
-    <!-- Touch to start -->
-    <div class="touch-start" id="touchStart">
-        <div class="logo">Story<span>2</span>Action</div>
-        <div class="play-btn">▶</div>
-        <p>Tocá para ver el tutorial</p>
+    <div class="step-overlay" id="stepOverlay">
+        <div class="step-tag" id="stepTag">Paso 1</div>
+        <div class="step-title"><span id="stepEmoji">📱</span> <span id="stepTitle">Notificación</span></div>
+        <p class="step-desc" id="stepDesc">Recibís el pack del mes directo en WhatsApp.</p>
     </div>
 
-    <!-- Barra de progreso -->
-    <div class="progress-bar-container">
-        <div class="progress-label">
-            <span class="brand">S2A · Tutorial</span>
-            <span class="step-count" id="stepCount">Paso 1 de 7</span>
-        </div>
-        <div class="progress-dots" id="progressDots">
-            <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-        </div>
+    <div class="controls">
+        <button class="nav-btn" onclick="prevStep()">⇠</button>
+        <button class="nav-btn" onclick="nextStep()">⇢</button>
     </div>
-
-    <!-- Overlay oscuro -->
-    <div class="dim-overlay" id="dimOverlay"></div>
-
-    <!-- Pausa chip -->
-    <div class="pause-chip" id="pauseChip">⏸ Leyendo...</div>
-
-    <!-- Timer ring -->
-    <div class="timer-ring" id="timerRing">
-        <svg width="36" height="36" viewBox="0 0 36 36">
-            <circle cx="18" cy="18" r="14"/>
-            <circle class="progress-ring" id="ringCircle" cx="18" cy="18" r="14"/>
-        </svg>
-        <div class="timer-text" id="timerText">5</div>
-    </div>
-
-    <!-- Tarjeta de paso (única, contenido dinámico) -->
-    <div class="step-card" id="stepCard">
-        <div class="step-number" id="cardNumber">1</div>
-        <div class="step-icon-title">
-            <span class="step-icon" id="cardIcon">📱</span>
-            <h3 id="cardTitle">Notificación</h3>
-        </div>
-        <div class="step-accent" id="cardAccent"></div>
-        <p id="cardDesc">Recibís el pack del mes directo en WhatsApp.</p>
-        <button class="btn-next" id="btnNext">
-            Siguiente paso <span class="arrow">→</span>
-        </button>
-    </div>
-
 </div>
 
 <script>
-    const video = document.getElementById('video');
-    const touchStart = document.getElementById('touchStart');
-    const dimOverlay = document.getElementById('dimOverlay');
-    const stepCard = document.getElementById('stepCard');
-    const pauseChip = document.getElementById('pauseChip');
-    const timerRing = document.getElementById('timerRing');
-    const ringCircle = document.getElementById('ringCircle');
-    const timerText = document.getElementById('timerText');
-    const btnNext = document.getElementById('btnNext');
-    const stepCountEl = document.getElementById('stepCount');
-    const progressDots = document.getElementById('progressDots').querySelectorAll('span');
-
-    // Datos de cada paso
+    const video = document.getElementById('tutoVideo');
     const steps = [
-        {
-            id: 1, icon: '📱', title: 'Notificación',
-            desc: 'Recibís el pack del mes directo en WhatsApp con todo el contenido listo para publicar.',
-            color: '#25D366', time: 0
-        },
-        {
-            id: 2, icon: '👆', title: 'Selección',
-            desc: 'Entrás al link del pack y seleccionás el contenido de la semana.',
-            color: '#0088cc', time: 8
-        },
-        {
-            id: 3, icon: '🛠', title: 'Herramientas',
-            desc: 'Elegís la imagen o video "Gancho" que más se adapte a tu negocio.',
-            color: '#FF9900', time: 16
-        },
-        {
-            id: 4, icon: '⬇️', title: 'Preparación',
-            desc: 'Descargás la imagen y copiás el enlace del micro-landing page.',
-            color: '#FF2D7C', time: 24
-        },
-        {
-            id: 5, icon: '🔗', title: 'Vinculación',
-            desc: 'Subís la imagen a Instagram Stories y pegás el enlace en el sticker de link.',
-            color: '#E1306C', time: 34
-        },
-        {
-            id: 6, icon: '📢', title: 'Publicación',
-            desc: 'Publicás tu historia. Está lista para atraer clientes y generar ventas.',
-            color: '#833AB4', time: 48
-        },
-        {
-            id: 7, icon: '💰', title: '¡Venta!',
-            desc: 'El cliente hace clic en tu historia y te escribe directo por WhatsApp para comprar.',
-            color: '#FFD600', time: 60
-        }
+        { time: 0, title: "Notificación", desc: "Recibís el pack del mes con contenido listo para publicar.", emoji: "📱" },
+        { time: 8, title: "Selección", desc: "Entrás al link y elegís el contenido de la semana.", emoji: "👆" },
+        { time: 16, title: "Gancho", desc: "Elegís la imagen o video que más se adapte a tu negocio.", emoji: "🧲" },
+        { time: 24, title: "Preparación", desc: "Descargás el material y copiás tu link de venta.", emoji: "⬇️" },
+        { time: 34, title: "Vinculación", desc: "Subís la historia a Instagram y pegás el enlace.", emoji: "🔗" },
+        { time: 48, title: "Publicación", desc: "¡Listo! Tu historia ya está trabajando por vos.", emoji: "📢" },
+        { time: 58, title: "Conversión", desc: "El cliente te escribe directo al WhatsApp para comprar.", emoji: "💰" }
     ];
 
     let currentStep = 0;
-    let autoTimer = null;
-    let countdown = 5;
-    let countInterval = null;
-    let isCardVisible = false;
-    const PAUSE_DURATION = 5000;
 
-    // ── Iniciar con toque ──
-    touchStart.addEventListener('click', () => {
-        touchStart.classList.add('hidden');
-        video.play().catch(() => {});
-        setTimeout(() => showStep(0), 800);
+    // Crear segmentos de progreso
+    const segmentsContainer = document.getElementById('progressSegments');
+    steps.forEach(() => {
+        const div = document.createElement('div');
+        div.className = 'segment';
+        div.innerHTML = '<div class="segment-fill"></div>';
+        segmentsContainer.appendChild(div);
     });
 
-    function updateProgress(index) {
-        stepCountEl.textContent = `Paso ${index + 1} de 7`;
-        progressDots.forEach((dot, i) => {
-            dot.className = '';
-            if (i < index) dot.classList.add('done');
-            else if (i === index) dot.classList.add('current');
+    function startTutorial() {
+        document.getElementById('welcome').style.display = 'none';
+        video.play();
+        updateUI();
+    }
+
+    video.ontimeupdate = () => {
+        const time = video.currentTime;
+        
+        // Actualizar barra de progreso visual
+        const segments = document.querySelectorAll('.segment');
+        steps.forEach((step, i) => {
+            const nextStepTime = steps[i+1] ? steps[i+1].time : video.duration;
+            const fill = segments[i].querySelector('.segment-fill');
+            
+            if (time > step.time) {
+                if (time < nextStepTime) {
+                    segments[i].classList.add('active');
+                    const progress = ((time - step.time) / (nextStepTime - step.time)) * 100;
+                    fill.style.width = `${progress}%`;
+                    if (currentStep !== i) {
+                        currentStep = i;
+                        updateUI();
+                    }
+                } else {
+                    segments[i].classList.remove('active');
+                    segments[i].classList.add('complete');
+                    fill.style.width = '100%';
+                }
+            } else {
+                segments[i].classList.remove('active', 'complete');
+                fill.style.width = '0%';
+            }
         });
-    }
+    };
 
-    function showStep(index) {
-        if (index >= steps.length) {
-            hideCard();
-            return;
-        }
-
-        const step = steps[index];
-        currentStep = index;
-
-        // Actualizar contenido de la tarjeta
-        document.getElementById('cardNumber').textContent = step.id;
-        document.getElementById('cardIcon').textContent = step.icon;
-        document.getElementById('cardTitle').textContent = step.title;
-        document.getElementById('cardDesc').textContent = step.desc;
-        document.getElementById('cardAccent').style.background = step.color;
-
-        // Botón final
-        if (index === steps.length - 1) {
-            btnNext.innerHTML = '✅ ¡Entendido! <span class="arrow">→</span>';
-            btnNext.classList.add('finish');
-        } else {
-            btnNext.innerHTML = 'Siguiente paso <span class="arrow">→</span>';
-            btnNext.classList.remove('finish');
-        }
-
-        // Pausar video
-        video.pause();
-        pauseChip.classList.add('show');
-
-        // Mostrar overlay y tarjeta
-        dimOverlay.classList.add('active');
-        stepCard.classList.add('active');
-        isCardVisible = true;
-
-        updateProgress(index);
-        startCountdown();
-
-        // Seek al timestamp del paso en el video
-        if (steps[index].time !== undefined) {
-            video.currentTime = steps[index].time;
-        }
-    }
-
-    function hideCard() {
-        stepCard.classList.remove('active');
-        dimOverlay.classList.remove('active');
-        pauseChip.classList.remove('show');
-        timerRing.classList.remove('visible');
-        isCardVisible = false;
-        clearInterval(countInterval);
-        clearTimeout(autoTimer);
-        video.play().catch(() => {});
-    }
-
-    function startCountdown() {
-        countdown = 5;
-        timerText.textContent = countdown;
-        const circumference = 88;
-        ringCircle.style.strokeDashoffset = circumference;
-        timerRing.classList.add('visible');
-
-        clearInterval(countInterval);
-        countInterval = setInterval(() => {
-            countdown--;
-            timerText.textContent = countdown;
-            const offset = circumference - (circumference * (5 - countdown) / 5);
-            ringCircle.style.strokeDashoffset = offset;
-            if (countdown <= 0) {
-                clearInterval(countInterval);
-                timerRing.classList.remove('visible');
-            }
-        }, 1000);
-
-        clearTimeout(autoTimer);
-        autoTimer = setTimeout(() => {
-            if (isCardVisible) {
-                nextStep();
-            }
-        }, PAUSE_DURATION);
+    function updateUI() {
+        const step = steps[currentStep];
+        const overlay = document.getElementById('stepOverlay');
+        
+        // Animación de salida y entrada de texto
+        overlay.classList.remove('active');
+        
+        setTimeout(() => {
+            document.getElementById('stepTag').innerText = `Paso ${currentStep + 1}`;
+            document.getElementById('stepEmoji').innerText = step.emoji;
+            document.getElementById('stepTitle').innerText = step.title;
+            document.getElementById('stepDesc').innerText = step.desc;
+            document.getElementById('stepIndicator').innerText = `PASO ${currentStep + 1} / ${steps.length}`;
+            overlay.classList.add('active');
+        }, 300);
     }
 
     function nextStep() {
-        clearTimeout(autoTimer);
-        clearInterval(countInterval);
-        const next = currentStep + 1;
-        if (next < steps.length) {
-            // Pequeña transición antes de mostrar el siguiente
-            stepCard.classList.remove('active');
-            setTimeout(() => showStep(next), 350);
-        } else {
-            hideCard();
+        if (currentStep < steps.length - 1) {
+            video.currentTime = steps[currentStep + 1].time;
         }
     }
 
-    btnNext.addEventListener('click', () => {
-        nextStep();
-    });
-
-    // Detección automática de pasos por tiempo (como fallback)
-    video.addEventListener('timeupdate', () => {
-        if (isCardVisible) return;
-        const t = video.currentTime;
-        for (let i = 0; i < steps.length; i++) {
-            const next = steps[i + 1];
-            const end = next ? next.time : 999;
-            if (t >= steps[i].time && t < steps[i].time + 1.2 && currentStep !== i) {
-                if (!isCardVisible) {
-                    showStep(i);
-                }
-                break;
-            }
+    function prevStep() {
+        if (currentStep > 0) {
+            video.currentTime = steps[currentStep - 1].time;
+        } else {
+            video.currentTime = 0;
         }
-    });
-
-    // Toque directo en video para pausar/reanudar (cuando no hay tarjeta activa)
-    video.addEventListener('click', () => {
-        if (!isCardVisible) {
-            if (video.paused) video.play();
-            else video.pause();
-        }
-    });
+    }
 </script>
 
 </body>
-    </html>
-    
+</html>
