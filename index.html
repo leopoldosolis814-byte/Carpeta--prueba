@@ -10,24 +10,34 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background: #050505;
+            background: #f8f9fa; /* Fondo general claro */
+            font-family: 'DM Sans', sans-serif;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            font-family: 'DM Sans', sans-serif;
-            color: white;
+            overflow-x: hidden;
+        }
+
+        /* CONTENEDOR DEL CELULAR */
+        .phone-section {
+            background: #111; /* Contraste para que resalte el celular */
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 40px 0;
+            position: relative;
         }
 
         .phone-frame {
             position: relative;
-            width: 360px;
-            height: 740px;
+            width: 280px; /* Tamaño reducido para que no ocupe toda la pantalla */
+            height: 560px;
             background: #000;
-            border-radius: 40px;
+            border-radius: 32px;
             overflow: hidden;
-            border: 10px solid #1a1a1a;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 8px solid #222;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
 
         video {
@@ -36,26 +46,25 @@
             object-fit: cover;
         }
 
-        /* BARRA DE PROGRESO */
+        /* BARRA DE PROGRESO (Sobre el video) */
         .header-ui {
             position: absolute;
             top: 0; left: 0; right: 0;
-            padding: 25px 20px;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
-            z-index: 30;
+            padding: 15px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+            z-index: 10;
         }
 
         .progress-segments {
             display: flex;
-            gap: 5px;
-            margin-bottom: 10px;
+            gap: 4px;
         }
 
         .segment {
             flex: 1;
-            height: 3px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 2px;
+            height: 2px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 1px;
             overflow: hidden;
         }
 
@@ -63,157 +72,133 @@
             height: 100%;
             width: 0%;
             background: #FF2D7C;
-            transition: width 0.1s linear;
         }
 
         .segment.active .segment-fill { background: #FFD600; }
         .segment.complete .segment-fill { width: 100%; background: #FF2D7C; }
 
-        /* TARJETA DE PASO (TIPO OVERLAY INFERIOR) */
-        .step-overlay {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            padding: 30px 20px 40px;
-            background: linear-gradient(to top, rgba(0,0,0,0.95) 70%, transparent);
-            transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.33, 1, 0.68, 1);
-            z-index: 40;
+        /* ZONA EXPLICATIVA (Abajo, fondo claro) */
+        .info-section {
+            width: 100%;
+            max-width: 380px;
+            padding: 30px 20px;
+            background: #ffffff;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-radius: 30px 30px 0 0;
+            margin-top: -20px; /* Sube un poco para "abrazar" la sección oscura */
+            z-index: 20;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.05);
         }
-
-        .step-overlay.active { transform: translateY(0); }
 
         .step-tag {
             display: inline-block;
-            padding: 4px 10px;
-            background: #FF2D7C;
-            border-radius: 6px;
+            color: #FF2D7C;
             font-family: 'Syne', sans-serif;
-            font-size: 10px;
+            font-size: 12px;
             font-weight: 800;
             text-transform: uppercase;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
         }
 
         .step-title {
             font-family: 'Syne', sans-serif;
-            font-size: 20px;
-            margin-bottom: 8px;
+            font-size: 26px;
+            color: #1a1a1a;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .step-desc {
-            font-size: 14px;
-            color: rgba(255,255,255,0.8);
-            line-height: 1.5;
+            font-size: 16px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 25px;
         }
 
-        /* CONTROLES */
-        .controls {
-            position: absolute;
-            top: 50%; left: 0; right: 0;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 10px;
-            z-index: 25;
-            pointer-events: none;
-        }
-
-        .nav-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(5px);
-            border: none;
+        /* BOTÓN DE ACCIÓN / PLAY */
+        .btn-main {
+            background: #FF2D7C;
             color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
             cursor: pointer;
-            pointer-events: all;
-            opacity: 0;
-            transition: opacity 0.3s;
+            transition: transform 0.2s;
+            text-align: center;
         }
 
-        .phone-frame:hover .nav-btn { opacity: 1; }
+        .btn-main:active { transform: scale(0.98); }
 
-        /* PANTALLA INICIAL */
-        .welcome-screen {
+        /* Pantalla de inicio */
+        .welcome-overlay {
             position: absolute;
             inset: 0;
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .play-trigger {
-            width: 80px;
-            height: 80px;
-            background: #FF2D7C;
-            border-radius: 50%;
+            background: rgba(0,0,0,0.8);
+            z-index: 50;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 30px;
-            margin-bottom: 20px;
             cursor: pointer;
-            box-shadow: 0 0 30px rgba(255, 45, 124, 0.4);
         }
-
     </style>
 </head>
 <body>
 
-<div class="phone-frame">
-    <div class="welcome-screen" id="welcome">
-        <div class="play-trigger" onclick="startTutorial()">▶</div>
-        <h2 style="font-family:'Syne'">Story2Action</h2>
-        <p style="font-size: 14px; opacity: 0.6; margin-top: 10px">Mirá cómo vender más en 60 segundos</p>
-    </div>
+<div class="phone-section">
+    <div class="phone-frame">
+        <div class="welcome-overlay" id="welcome" onclick="startTutorial()">
+            <div style="text-align:center; color:white">
+                <div style="font-size:40px; margin-bottom:10px">▶</div>
+                <p style="font-family:'Syne'; font-size:12px">TOCÁ PARA EMPEZAR</p>
+            </div>
+        </div>
 
-    <div class="header-ui">
-        <div class="progress-segments" id="progressSegments"></div>
-        <div style="font-size: 10px; opacity: 0.5; font-weight: bold; letter-spacing: 1px" id="stepIndicator">PASO 1 / 7</div>
-    </div>
+        <div class="header-ui">
+            <div class="progress-segments" id="progressSegments"></div>
+        </div>
 
-    <video id="tutoVideo" playsinline>
-        <source src="https://res.cloudinary.com/ds2udm1nc/video/upload/v1775641154/XRecorder_20260408_01_3_erklpv.mp4" type="video/mp4">
-    </video>
-
-    <div class="step-overlay" id="stepOverlay">
-        <div class="step-tag" id="stepTag">Paso 1</div>
-        <div class="step-title"><span id="stepEmoji">📱</span> <span id="stepTitle">Notificación</span></div>
-        <p class="step-desc" id="stepDesc">Recibís el pack del mes directo en WhatsApp.</p>
+        <video id="tutoVideo" playsinline>
+            <source src="https://res.cloudinary.com/ds2udm1nc/video/upload/v1775641154/XRecorder_20260408_01_3_erklpv.mp4" type="video/mp4">
+        </video>
     </div>
+</div>
 
-    <div class="controls">
-        <button class="nav-btn" onclick="prevStep()">⇠</button>
-        <button class="nav-btn" onclick="nextStep()">⇢</button>
-    </div>
+<div class="info-section">
+    <span class="step-tag" id="stepTag">Paso 1</span>
+    <h2 class="step-title">
+        <span id="stepEmoji">📱</span>
+        <span id="stepTitle">Notificación</span>
+    </h2>
+    <p class="step-desc" id="stepDesc">
+        Recibís el pack del mes directo en tu WhatsApp con todo listo.
+    </p>
+    
+    <button class="btn-main" onclick="nextStep()" id="btnNext">Siguiente Paso →</button>
 </div>
 
 <script>
     const video = document.getElementById('tutoVideo');
     const steps = [
-        { time: 0, title: "Notificación", desc: "Recibís el pack del mes con contenido listo para publicar.", emoji: "📱" },
-        { time: 8, title: "Selección", desc: "Entrás al link y elegís el contenido de la semana.", emoji: "👆" },
-        { time: 16, title: "Gancho", desc: "Elegís la imagen o video que más se adapte a tu negocio.", emoji: "🧲" },
-        { time: 24, title: "Preparación", desc: "Descargás el material y copiás tu link de venta.", emoji: "⬇️" },
-        { time: 34, title: "Vinculación", desc: "Subís la historia a Instagram y pegás el enlace.", emoji: "🔗" },
-        { time: 48, title: "Publicación", desc: "¡Listo! Tu historia ya está trabajando por vos.", emoji: "📢" },
-        { time: 58, title: "Conversión", desc: "El cliente te escribe directo al WhatsApp para comprar.", emoji: "💰" }
+        { time: 0, title: "Notificación", desc: "Recibís el pack del mes con contenido listo para publicar por WhatsApp.", emoji: "📱" },
+        { time: 8, title: "Selección", desc: "Entrás al link del pack y elegís el contenido de la semana.", emoji: "👆" },
+        { time: 16, title: "El Gancho", desc: "Elegís la imagen o video que más se adapte a tu oferta.", emoji: "🧲" },
+        { time: 24, title: "Preparación", desc: "Descargás el material y copiás tu micro-landing de venta.", emoji: "⬇️" },
+        { time: 34, title: "Vinculación", desc: "Subís la historia a Instagram y pegás el enlace en el sticker.", emoji: "🔗" },
+        { time: 48, title: "Publicación", desc: "Tu historia ya está en línea atrayendo posibles clientes.", emoji: "📢" },
+        { time: 58, title: "Conversión", desc: "El cliente ve tu promo y te escribe directo al WhatsApp para comprar.", emoji: "💰" }
     ];
 
     let currentStep = 0;
 
-    // Crear segmentos de progreso
+    // Generar barritas de progreso
     const segmentsContainer = document.getElementById('progressSegments');
     steps.forEach(() => {
         const div = document.createElement('div');
@@ -225,22 +210,20 @@
     function startTutorial() {
         document.getElementById('welcome').style.display = 'none';
         video.play();
-        updateUI();
     }
 
     video.ontimeupdate = () => {
         const time = video.currentTime;
-        
-        // Actualizar barra de progreso visual
         const segments = document.querySelectorAll('.segment');
+        
         steps.forEach((step, i) => {
-            const nextStepTime = steps[i+1] ? steps[i+1].time : video.duration;
+            const nextTime = steps[i+1] ? steps[i+1].time : video.duration;
             const fill = segments[i].querySelector('.segment-fill');
             
             if (time > step.time) {
-                if (time < nextStepTime) {
+                if (time < nextTime) {
                     segments[i].classList.add('active');
-                    const progress = ((time - step.time) / (nextStepTime - step.time)) * 100;
+                    const progress = ((time - step.time) / (nextTime - step.time)) * 100;
                     fill.style.width = `${progress}%`;
                     if (currentStep !== i) {
                         currentStep = i;
@@ -260,32 +243,27 @@
 
     function updateUI() {
         const step = steps[currentStep];
-        const overlay = document.getElementById('stepOverlay');
+        document.getElementById('stepTag').innerText = `Paso ${currentStep + 1} de ${steps.length}`;
+        document.getElementById('stepEmoji').innerText = step.emoji;
+        document.getElementById('stepTitle').innerText = step.title;
+        document.getElementById('stepDesc').innerText = step.desc;
         
-        // Animación de salida y entrada de texto
-        overlay.classList.remove('active');
-        
-        setTimeout(() => {
-            document.getElementById('stepTag').innerText = `Paso ${currentStep + 1}`;
-            document.getElementById('stepEmoji').innerText = step.emoji;
-            document.getElementById('stepTitle').innerText = step.title;
-            document.getElementById('stepDesc').innerText = step.desc;
-            document.getElementById('stepIndicator').innerText = `PASO ${currentStep + 1} / ${steps.length}`;
-            overlay.classList.add('active');
-        }, 300);
+        const btn = document.getElementById('btnNext');
+        if(currentStep === steps.length - 1) {
+            btn.innerText = "¡Empezar ahora!";
+            btn.style.background = "#25D366"; // Color WhatsApp
+        } else {
+            btn.innerText = "Siguiente Paso →";
+            btn.style.background = "#FF2D7C";
+        }
     }
 
     function nextStep() {
         if (currentStep < steps.length - 1) {
             video.currentTime = steps[currentStep + 1].time;
-        }
-    }
-
-    function prevStep() {
-        if (currentStep > 0) {
-            video.currentTime = steps[currentStep - 1].time;
+            video.play();
         } else {
-            video.currentTime = 0;
+            alert("¡Redirigiendo al servicio!");
         }
     }
 </script>
