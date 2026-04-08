@@ -3,150 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light"> 
     <title>Story2Action Tutorial</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;700&display=swap');
 
+        /* Reset para evitar que el navegador meta colores raros */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            /* Fondo de la página en un gris casi blanco para que la tarjeta resalte */
-            background: #f0f2f5; 
+            background: #f0f2f5 !important; /* Forzamos el gris clarito de fondo */
             font-family: 'DM Sans', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
+            color: #111 !important; /* Texto siempre oscuro */
         }
 
-        /* SECCIÓN SUPERIOR: Celular sobre fondo oscuro para que brille la pantalla */
         .phone-section {
-            background: #0a0a0a;
+            background: #000000 !important; /* La parte del celu siempre negra */
             width: 100%;
             display: flex;
             justify-content: center;
-            padding: 30px 0 50px 0; /* Espacio para que el celular respire */
+            padding: 20px 0 40px 0;
             position: relative;
         }
 
         .phone-frame {
             position: relative;
-            width: 260px; /* Tamaño ideal para que no tape nada */
+            width: 260px;
             height: 520px;
             background: #000;
             border-radius: 35px;
             overflow: hidden;
-            border: 7px solid #252525;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            border: 6px solid #222;
         }
 
-        video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        video { width: 100%; height: 100%; object-fit: cover; }
 
-        /* BARRA DE PROGRESO SOBRE EL VIDEO */
-        .header-ui {
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            padding: 12px;
-            z-index: 10;
-        }
-
-        .progress-segments {
-            display: flex;
-            gap: 4px;
-        }
-
-        .segment {
-            flex: 1;
-            height: 3px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .segment-fill {
-            height: 100%;
-            width: 0%;
-            background: #FF2D7C;
-        }
-
-        .segment.active .segment-fill { background: #FFD600; }
-        .segment.complete .segment-fill { width: 100%; background: #FF2D7C; }
-
-        /* SECCIÓN INFERIOR: EXPLICACIÓN SOBRE FONDO BLANCO */
+        /* SECCIÓN DE TEXTO: Forzamos el blanco */
         .info-section {
             width: 100%;
-            max-width: 100%; /* Ocupa todo el ancho en mobile */
-            background: #ffffff; /* BLANCO PURO */
-            padding: 40px 25px;
+            background: #ffffff !important; 
+            padding: 35px 25px;
             border-radius: 30px 30px 0 0;
-            margin-top: -30px; /* "Muerde" un poco la sección oscura para el diseño */
+            margin-top: -25px;
             z-index: 20;
             flex-grow: 1;
-            box-shadow: 0 -15px 30px rgba(0,0,0,0.08);
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
             display: flex;
             flex-direction: column;
         }
 
         .step-tag {
-            color: #FF2D7C;
+            color: #FF2D7C !important;
             font-family: 'Syne', sans-serif;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .step-title {
             font-family: 'Syne', sans-serif;
-            font-size: 28px;
-            color: #111111; /* Texto casi negro para máxima lectura */
-            margin-bottom: 15px;
+            font-size: 26px;
+            color: #111111 !important;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .step-desc {
-            font-size: 17px;
-            color: #444444; /* Gris oscuro para lectura descansada */
-            line-height: 1.6;
-            margin-bottom: 30px;
+            font-size: 16px;
+            color: #444444 !important;
+            line-height: 1.5;
+            margin-bottom: 25px;
         }
 
-        /* BOTÓN DE ACCIÓN */
         .btn-main {
-            background: #FF2D7C;
-            color: white;
+            background: #FF2D7C !important;
+            color: white !important;
             border: none;
-            padding: 18px;
-            border-radius: 15px;
-            font-family: 'DM Sans', sans-serif;
+            padding: 16px;
+            border-radius: 12px;
             font-weight: 700;
             font-size: 16px;
             cursor: pointer;
-            box-shadow: 0 10px 20px rgba(255, 45, 124, 0.2);
-            transition: all 0.2s ease;
             text-align: center;
-            text-decoration: none;
         }
 
-        .btn-main:active { transform: scale(0.96); }
+        /* Barra de progreso */
+        .header-ui { position: absolute; top: 0; left: 0; right: 0; padding: 12px; z-index: 10; }
+        .progress-segments { display: flex; gap: 4px; }
+        .segment { flex: 1; height: 3px; background: rgba(255,255,255,0.2); border-radius: 2px; }
+        .segment-fill { height: 100%; width: 0%; background: #FF2D7C; }
+        .segment.active .segment-fill { background: #FFD600; }
+        .segment.complete .segment-fill { width: 100%; background: #FF2D7C; }
 
-        /* Overlay de inicio */
         .start-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            cursor: pointer;
+            position: absolute; inset: 0; background: rgba(0,0,0,0.7);
+            display: flex; align-items: center; justify-content: center; z-index: 100;
         }
     </style>
 </head>
@@ -156,33 +113,19 @@
     <div class="phone-frame">
         <div class="start-overlay" id="startBtn" onclick="initTuto()">
             <div style="text-align:center; color:white">
-                <div style="font-size:50px">▶</div>
-                <p style="font-family:'Syne'; font-size:11px; margin-top:10px; letter-spacing:2px">EMPEZAR TUTORIAL</p>
+                <div style="font-size:40px">▶</div>
+                <p style="font-family:'Syne'; font-size:10px; margin-top:8px">TOCÁ PARA VER</p>
             </div>
         </div>
-
-        <div class="header-ui">
-            <div class="progress-segments" id="progressSegments"></div>
-        </div>
-
-        <video id="v" playsinline>
-            <source src="https://res.cloudinary.com/ds2udm1nc/video/upload/v1775641154/XRecorder_20260408_01_3_erklpv.mp4" type="video/mp4">
-        </video>
+        <div class="header-ui"><div class="progress-segments" id="progressSegments"></div></div>
+        <video id="v" playsinline><source src="https://res.cloudinary.com/ds2udm1nc/video/upload/v1775641154/XRecorder_20260408_01_3_erklpv.mp4" type="video/mp4"></video>
     </div>
 </div>
 
 <div class="info-section">
-    <div id="content-area">
-        <div class="step-tag" id="tag">Paso 1 de 7</div>
-        <h2 class="step-title">
-            <span id="emoji">📱</span>
-            <span id="title">Notificación</span>
-        </h2>
-        <p class="step-desc" id="desc">
-            Recibís el pack del mes con todo el contenido directo en tu WhatsApp.
-        </p>
-    </div>
-    
+    <span class="step-tag" id="tag">Paso 1 de 7</span>
+    <h2 class="step-title"><span id="emoji">📱</span> <span id="title">Notificación</span></h2>
+    <p class="step-desc" id="desc">Recibís el pack del mes con todo el contenido directo en tu WhatsApp.</p>
     <button class="btn-main" onclick="handleNext()" id="mainBtn">Siguiente Paso →</button>
 </div>
 
@@ -197,74 +140,42 @@
         { t: 48, title: "Publicación", desc: "¡Listo! Tu historia ya está trabajando para atraer clientes.", e: "📢" },
         { t: 58, title: "¡Venta!", desc: "El cliente ve tu historia y te escribe directo al WhatsApp para comprar.", e: "💰" }
     ];
-
     let current = 0;
-
-    // Crear barritas
     const segs = document.getElementById('progressSegments');
     steps.forEach(() => {
         const d = document.createElement('div');
-        d.className = 'segment';
-        d.innerHTML = '<div class="segment-fill"></div>';
+        d.className = 'segment'; d.innerHTML = '<div class="segment-fill"></div>';
         segs.appendChild(d);
     });
-
-    function initTuto() {
-        document.getElementById('startBtn').style.display = 'none';
-        video.play();
-    }
-
+    function initTuto() { document.getElementById('startBtn').style.display = 'none'; video.play(); }
     video.ontimeupdate = () => {
         const now = video.currentTime;
         const s = document.querySelectorAll('.segment');
-        
         steps.forEach((step, i) => {
             const nextT = steps[i+1] ? steps[i+1].t : video.duration;
             const f = s[i].querySelector('.segment-fill');
-            
             if (now > step.t) {
                 if (now < nextT) {
                     s[i].classList.add('active');
                     f.style.width = `${((now - step.t) / (nextT - step.t)) * 100}%`;
                     if (current !== i) { current = i; updateUI(); }
-                } else {
-                    s[i].classList.remove('active');
-                    s[i].classList.add('complete');
-                    f.style.width = '100%';
-                }
-            } else {
-                s[i].classList.remove('active', 'complete');
-                f.style.width = '0%';
-            }
+                } else { s[i].classList.remove('active'); s[i].classList.add('complete'); f.style.width = '100%'; }
+            } else { s[i].classList.remove('active', 'complete'); f.style.width = '0%'; }
         });
     };
-
     function updateUI() {
         const st = steps[current];
         document.getElementById('tag').innerText = `Paso ${current + 1} de ${steps.length}`;
         document.getElementById('emoji').innerText = st.e;
         document.getElementById('title').innerText = st.title;
         document.getElementById('desc').innerText = st.desc;
-        
         const b = document.getElementById('mainBtn');
-        if(current === steps.length - 1) {
-            b.innerText = "¡QUIERO EMPEZAR!";
-            b.style.background = "#25D366";
-        } else {
-            b.innerText = "Siguiente Paso →";
-            b.style.background = "#FF2D7C";
-        }
+        if(current === steps.length - 1) { b.innerText = "¡QUIERO EMPEZAR!"; b.style.background = "#25D366"; }
+        else { b.innerText = "Siguiente Paso →"; b.style.background = "#FF2D7C"; }
     }
-
     function handleNext() {
-        if (current < steps.length - 1) {
-            video.currentTime = steps[current + 1].t;
-            video.play();
-        } else {
-            window.location.href = "#"; // Link final
-        }
+        if (current < steps.length - 1) { video.currentTime = steps[current + 1].t; video.play(); }
     }
 </script>
-
 </body>
 </html>
