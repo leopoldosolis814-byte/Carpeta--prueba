@@ -3,436 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tutorial Story2Action - Cómo Vender por Instagram</title>
+    <title>Story2Action - Explicativo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --primary: #ff0057;
+            --accent: #00ff88;
+            --dark: #000000;
         }
 
-        body {
-            background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            font-family: 'Inter', sans-serif;
-            padding: 20px;
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--dark);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+            color: white;
         }
 
         .container {
             position: relative;
-            width: 100%;
-            max-width: 400px;
-            background: #000;
-            border-radius: 25px;
-            overflow: hidden;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.6);
-            border: 3px solid #333;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        .video-wrapper {
-            position: relative;
-            width: 100%;
-            padding-bottom: 177.78%; /* 9:16 aspect ratio */
-            background: #000;
-        }
-
+        /* Estilo del Video */
         video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            height: 90vh;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(255, 0, 87, 0.3);
+            border: 2px solid #333;
         }
 
-        /* OVERLAY PRINCIPAL */
+        /* Capas de Texto */
         .overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            text-align: center;
             z-index: 10;
+            pointer-events: none;
         }
 
-        /* CAJAS DE TEXTO ANIMADAS */
-        .info-box {
-            position: absolute;
-            background: rgba(0, 0, 0, 0.92);
-            backdrop-filter: blur(10px);
+        .step-text {
+            display: none;
+            background: rgba(0, 0, 0, 0.8);
             padding: 15px 20px;
-            border-radius: 15px;
-            border-left: 5px solid;
-            opacity: 0;
-            transform: translateY(30px) scale(0.9);
-            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-            max-width: 90%;
-            z-index: 20;
+            border-radius: 12px;
+            border-left: 5px solid var(--primary);
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
         }
 
-        .info-box.active {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-
-        .info-box.whatsapp {
-            bottom: 120px;
-            left: 50%;
-            transform: translateX(-50%) translateY(30px) scale(0.9);
-            border-left-color: #25D366;
-        }
-
-        .info-box.whatsapp.active {
-            transform: translateX(-50%) translateY(0) scale(1);
-        }
-
-        .info-box.web {
-            top: 20%;
-            right: 10px;
-            border-left-color: #0088cc;
-        }
-
-        .info-box.instagram {
-            bottom: 100px;
-            left: 10px;
-            border-left-color: #E1306C;
-        }
-
-        .info-box.result {
-            bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%) translateY(30px) scale(0.9);
-            border-left-color: #FFD700;
-        }
-
-        .info-box.result.active {
-            transform: translateX(-50%) translateY(0) scale(1);
-        }
-
-        .info-box h3 {
-            font-size: 15px;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 900;
-        }
-
-        .info-box.whatsapp h3 { color: #25D366; }
-        .info-box.web h3 { color: #0088cc; }
-        .info-box.instagram h3 { color: #E1306C; }
-        .info-box.result h3 { color: #FFD700; }
-
-        .info-box p {
-            font-size: 14px;
-            line-height: 1.5;
-            color: #fff;
-            font-weight: 400;
-        }
-
-        /* FLECHAS Y SEÑALADORES */
+        /* Flechas y Marcadores */
         .pointer {
             position: absolute;
-            font-size: 40px;
-            opacity: 0;
-            z-index: 15;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+            display: none;
+            z-index: 11;
+            color: var(--accent);
+            font-size: 3rem;
+            filter: drop-shadow(0 0 10px var(--accent));
         }
 
-        .pointer.active {
-            opacity: 1;
-            animation: bounceArrow 1.5s ease-in-out infinite;
-        }
-
-        @keyframes bounceArrow {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            25% { transform: translateY(-15px) rotate(-10deg); }
-            75% { transform: translateY(5px) rotate(10deg); }
-        }
-
-        /* CÍRCULOS DE DESTACADO */
-        .highlight-circle {
+        /* Barra de progreso visual */
+        .progress-container {
             position: absolute;
-            border: 4px solid;
-            border-radius: 50%;
-            opacity: 0;
-            z-index: 12;
-            animation: pulseCircle 2s ease-in-out infinite;
+            bottom: 20px;
+            width: 60%;
+            height: 6px;
+            background: #333;
+            border-radius: 10px;
         }
 
-        .highlight-circle.active {
-            opacity: 1;
-        }
-
-        @keyframes pulseCircle {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 0.4; }
-        }
-
-        /* BOTÓN DE PLAY */
-        .play-btn {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90px;
-            height: 90px;
-            background: rgba(255,255,255,0.95);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 50px;
-            color: #000;
-            cursor: pointer;
-            z-index: 30;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            transition: all 0.3s;
-        }
-
-        .play-btn:hover {
-            transform: translate(-50%, -50%) scale(1.1);
-            background: #fff;
-        }
-
-        .play-btn.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        /* BARRA DE PROGRESO */
-        .progress-bar {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            height: 5px;
-            background: linear-gradient(90deg, #25D366, #E1306C);
+        #progress-bar {
             width: 0%;
-            z-index: 25;
+            height: 100%;
+            background: var(--primary);
+            border-radius: 10px;
             transition: width 0.1s linear;
         }
 
-        /* NÚMEROS DE PASO */
-        .step-number {
-            position: absolute;
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 900;
-            font-size: 18px;
-            color: white;
-            opacity: 0;
-            transform: scale(0);
-            z-index: 18;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-
-        .step-number.active {
-            opacity: 1;
-            transform: scale(1);
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        @keyframes popIn {
-            0% { transform: scale(0); }
-            80% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 480px) {
-            .container {
-                border-radius: 15px;
-                border: 2px solid #333;
-            }
-            
-            .info-box {
-                padding: 12px 15px;
-            }
-            
-            .info-box h3 {
-                font-size: 13px;
-            }
-            
-            .info-box p {
-                font-size: 12px;
-            }
+        @media (max-width: 600px) {
+            video { height: 100vh; border-radius: 0; border: none; }
+            .step-text { font-size: 1rem; width: 90%; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="video-wrapper">
-        <video id="tutorialVideo" playsinline preload="metadata">
-            <source src="https://res.cloudinary.com/ds2udm1nc/video/upload/v1775641154/XRecorder_20260408_01_3_erklpv.mp4" type="video/mp4">
-            Tu navegador no soporta la reproducción de video.
-        </video>
-        
-        <div class="play-btn" id="playBtn" onclick="togglePlay()">▶</div>
-        
-        <div class="progress-bar" id="progressBar"></div>
+    <video id="mainVideo" muted playsinline>
+        <source src="https://res.cloudinary.com/ds2udm1nc/video/upload/v1775641154/XRecorder_20260408_01_3_erklpv.mp4" type="video/mp4">
+    </video>
 
-        <!-- OVERLAY CON ELEMENTOS ANIMADOS -->
-        <div class="overlay">
-            
-            <!-- PASO 1: WHATSAPP -->
-            <div class="step-number" id="step1-num" style="top: 10%; left: 10%;">1</div>
-            <div class="info-box whatsapp" id="step1-box">
-                <h3>📱 Paso 1: Recibís el Pack</h3>
-                <p>Te llega por WhatsApp el contenido del mes listo para publicar</p>
-            </div>
+    <div class="overlay">
+        <div id="step1" class="step-text animate__animated">🚀 Recibí tu Pack del Mes por WhatsApp</div>
+        <div id="step2" class="step-text animate__animated">🧠 Elegí creativos diseñados con IA para impactar</div>
+        <div id="step3" class="step-text animate__animated">🔗 Copiá tu enlace de venta personalizado</div>
+        <div id="step4" class="step-text animate__animated">📸 Subilo a Instagram y agregá el sticker</div>
+        <div id="step5" class="step-text animate__animated">💰 ¡Listo! Recibí pedidos directo a tu WhatsApp</div>
+    </div>
 
-            <!-- PASO 2: WEB -->
-            <div class="step-number" id="step2-num" style="top: 15%; right: 10%;">2</div>
-            <div class="pointer" id="pointer2" style="top: 45%; right: 15%;">👇</div>
-            <div class="highlight-circle" id="circle2" style="top: 40%; right: 10%; width: 120px; height: 120px; border-color: #0088cc;"></div>
-            <div class="info-box web" id="step2-box">
-                <h3>🌐 Paso 2: Copiás el Link</h3>
-                <p>Ingresás a la web, descargás la imagen y copiás el enlace del botón naranja</p>
-            </div>
+    <div id="arrow" class="pointer animate__animated animate__bounceIn">⬇️</div>
 
-            <!-- PASO 3: INSTAGRAM -->
-            <div class="step-number" id="step3-num" style="bottom: 30%; left: 10%;">3</div>
-            <div class="pointer" id="pointer3" style="bottom: 35%; left: 50%; transform: translateX(-50%);">🔗</div>
-            <div class="highlight-circle" id="circle3" style="bottom: 25%; left: 50%; transform: translateX(-50%); width: 100px; height: 100px; border-color: #E1306C;"></div>
-            <div class="info-box instagram" id="step3-box">
-                <h3>📸 Paso 3: Publicás en Instagram</h3>
-                <p>Subís la imagen a Stories y pegás el link en el sticker de "Enlace"</p>
-            </div>
-
-            <!-- PASO 4: RESULTADO -->
-            <div class="step-number" id="step4-num" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">4</div>
-            <div class="info-box result" id="step4-box">
-                <h3>✅ Paso 4: ¡Ventas Automáticas!</h3>
-                <p>Tus clientes hacen click y te escriben directo a WhatsApp para pedir</p>
-            </div>
-
-        </div>
+    <div class="progress-container">
+        <div id="progress-bar"></div>
     </div>
 </div>
 
 <script>
-    const video = document.getElementById('tutorialVideo');
-    const playBtn = document.getElementById('playBtn');
-    const progressBar = document.getElementById('progressBar');
+    const video = document.getElementById('mainVideo');
+    const progressBar = document.getElementById('progress-bar');
+    const arrow = document.getElementById('arrow');
 
-    // Elementos de cada paso
-    const steps = {
-        1: {
-            box: document.getElementById('step1-box'),
-            num: document.getElementById('step1-num')
-        },
-        2: {
-            box: document.getElementById('step2-box'),
-            num: document.getElementById('step2-num'),
-            pointer: document.getElementById('pointer2'),
-            circle: document.getElementById('circle2')
-        },
-        3: {
-            box: document.getElementById('step3-box'),
-            num: document.getElementById('step3-num'),
-            pointer: document.getElementById('pointer3'),
-            circle: document.getElementById('circle3')
-        },
-        4: {
-            box: document.getElementById('step4-box'),
-            num: document.getElementById('step4-num')
-        }
-    };
+    // Configuración de los tiempos (en segundos)
+    const script = [
+        { start: 0, end: 4, id: 'step1', arrow: null },
+        { start: 5, end: 12, id: 'step2', arrow: null },
+        { start: 17, end: 23, id: 'step3', arrow: { top: '80%', left: '30%' } },
+        { start: 35, end: 50, id: 'step4', arrow: { top: '45%', left: '50%' } },
+        { start: 110, end: 132, id: 'step5', arrow: { top: '85%', left: '50%' } }
+    ];
 
-    function togglePlay() {
-        if (video.paused) {
-            video.play();
-            playBtn.classList.add('hidden');
-        } else {
-            video.pause();
-            playBtn.classList.remove('hidden');
-        }
-    }
-
-    function hideAllSteps() {
-        Object.values(steps).forEach(step => {
-            if (step.box) step.box.classList.remove('active');
-            if (step.num) step.num.classList.remove('active');
-            if (step.pointer) step.pointer.classList.remove('active');
-            if (step.circle) step.circle.classList.remove('active');
-        });
-    }
-
-    // Control de tiempos basado en el video
     video.addEventListener('timeupdate', () => {
         const currentTime = video.currentTime;
-        const duration = video.duration || 90; // Duración estimada
         
         // Actualizar barra de progreso
-        const progress = (currentTime / duration) * 100;
-        progressBar.style.width = progress + '%';
+        const progress = (currentTime / video.duration) * 100;
+        progressBar.style.width = progress + "%";
 
-        // Resetear todo
-        hideAllSteps();
-
-        // PASO 1: WhatsApp (0s - 6s)
-        if (currentTime >= 0 && currentTime < 6) {
-            steps[1].box.classList.add('active');
-            steps[1].num.classList.add('active');
-        }
-
-        // PASO 2: Web (6s - 25s)
-        if (currentTime >= 6 && currentTime < 25) {
-            steps[2].box.classList.add('active');
-            steps[2].num.classList.add('active');
-            
-            // Mostrar flecha y círculo cuando está por copiar el link (18s - 25s)
-            if (currentTime >= 18) {
-                steps[2].pointer.classList.add('active');
-                steps[2].circle.classList.add('active');
+        // Lógica de textos y flechas
+        script.forEach(step => {
+            const el = document.getElementById(step.id);
+            if (currentTime >= step.start && currentTime <= step.end) {
+                if (el.style.display !== 'block') {
+                    el.style.display = 'block';
+                    el.classList.add('animate__fadeInUp');
+                }
+                
+                // Mostrar flecha si existe posición definida
+                if (step.arrow) {
+                    arrow.style.display = 'block';
+                    arrow.style.top = step.arrow.top;
+                    arrow.style.left = step.arrow.left;
+                } else {
+                    arrow.style.display = 'none';
+                }
+            } else {
+                if (el.style.display === 'block') {
+                    el.classList.remove('animate__fadeInUp');
+                    el.classList.add('animate__fadeOut');
+                    setTimeout(() => { 
+                        el.style.display = 'none'; 
+                        el.classList.remove('animate__fadeOut');
+                    }, 500);
+                }
             }
-        }
-
-        // PASO 3: Instagram (25s - 65s)
-        if (currentTime >= 25 && currentTime < 65) {
-            steps[3].box.classList.add('active');
-            steps[3].num.classList.add('active');
-            
-            // Mostrar elementos cuando agrega el sticker de enlace (40s - 65s)
-            if (currentTime >= 40) {
-                steps[3].pointer.classList.add('active');
-                steps[3].circle.classList.add('active');
-            }
-        }
-
-        // PASO 4: Resultado (65s en adelante)
-        if (currentTime >= 65) {
-            steps[4].box.classList.add('active');
-            steps[4].num.classList.add('active');
-        }
+        });
     });
 
-    // Cuando termina el video
-    video.addEventListener('ended', () => {
-        playBtn.classList.remove('hidden');
-        progressBar.style.width = '0%';
-    });
+    // Iniciar video al hacer click (por políticas de navegadores)
+    document.body.addEventListener('click', () => {
+        video.play();
+    }, { once: true });
 
-    // Click en el video para pausar/reproducir
-    video.addEventListener('click', togglePlay);
-
-    // Cargar metadata para obtener duración real
-    video.addEventListener('loadedmetadata', () => {
-        console.log('Duración del video:', video.duration);
-    });
 </script>
 
 </body>
-  </html>
+</html>
