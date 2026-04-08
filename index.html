@@ -10,34 +10,34 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background: #f8f9fa; /* Fondo general claro */
+            /* Fondo de la página en un gris casi blanco para que la tarjeta resalte */
+            background: #f0f2f5; 
             font-family: 'DM Sans', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            overflow-x: hidden;
         }
 
-        /* CONTENEDOR DEL CELULAR */
+        /* SECCIÓN SUPERIOR: Celular sobre fondo oscuro para que brille la pantalla */
         .phone-section {
-            background: #111; /* Contraste para que resalte el celular */
+            background: #0a0a0a;
             width: 100%;
             display: flex;
             justify-content: center;
-            padding: 40px 0;
+            padding: 30px 0 50px 0; /* Espacio para que el celular respire */
             position: relative;
         }
 
         .phone-frame {
             position: relative;
-            width: 280px; /* Tamaño reducido para que no ocupe toda la pantalla */
-            height: 560px;
+            width: 260px; /* Tamaño ideal para que no tape nada */
+            height: 520px;
             background: #000;
-            border-radius: 32px;
+            border-radius: 35px;
             overflow: hidden;
-            border: 8px solid #222;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border: 7px solid #252525;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
         }
 
         video {
@@ -46,12 +46,11 @@
             object-fit: cover;
         }
 
-        /* BARRA DE PROGRESO (Sobre el video) */
+        /* BARRA DE PROGRESO SOBRE EL VIDEO */
         .header-ui {
             position: absolute;
             top: 0; left: 0; right: 0;
-            padding: 15px;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+            padding: 12px;
             z-index: 10;
         }
 
@@ -62,9 +61,9 @@
 
         .segment {
             flex: 1;
-            height: 2px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 1px;
+            height: 3px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
             overflow: hidden;
         }
 
@@ -77,75 +76,76 @@
         .segment.active .segment-fill { background: #FFD600; }
         .segment.complete .segment-fill { width: 100%; background: #FF2D7C; }
 
-        /* ZONA EXPLICATIVA (Abajo, fondo claro) */
+        /* SECCIÓN INFERIOR: EXPLICACIÓN SOBRE FONDO BLANCO */
         .info-section {
             width: 100%;
-            max-width: 380px;
-            padding: 30px 20px;
-            background: #ffffff;
+            max-width: 100%; /* Ocupa todo el ancho en mobile */
+            background: #ffffff; /* BLANCO PURO */
+            padding: 40px 25px;
+            border-radius: 30px 30px 0 0;
+            margin-top: -30px; /* "Muerde" un poco la sección oscura para el diseño */
+            z-index: 20;
             flex-grow: 1;
+            box-shadow: 0 -15px 30px rgba(0,0,0,0.08);
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            border-radius: 30px 30px 0 0;
-            margin-top: -20px; /* Sube un poco para "abrazar" la sección oscura */
-            z-index: 20;
-            box-shadow: 0 -10px 30px rgba(0,0,0,0.05);
         }
 
         .step-tag {
-            display: inline-block;
             color: #FF2D7C;
             font-family: 'Syne', sans-serif;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 800;
             text-transform: uppercase;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
         }
 
         .step-title {
             font-family: 'Syne', sans-serif;
-            font-size: 26px;
-            color: #1a1a1a;
-            margin-bottom: 12px;
+            font-size: 28px;
+            color: #111111; /* Texto casi negro para máxima lectura */
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
         .step-desc {
-            font-size: 16px;
-            color: #555;
+            font-size: 17px;
+            color: #444444; /* Gris oscuro para lectura descansada */
             line-height: 1.6;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
-        /* BOTÓN DE ACCIÓN / PLAY */
+        /* BOTÓN DE ACCIÓN */
         .btn-main {
             background: #FF2D7C;
             color: white;
             border: none;
-            padding: 16px;
-            border-radius: 12px;
+            padding: 18px;
+            border-radius: 15px;
+            font-family: 'DM Sans', sans-serif;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 16px;
             cursor: pointer;
-            transition: transform 0.2s;
+            box-shadow: 0 10px 20px rgba(255, 45, 124, 0.2);
+            transition: all 0.2s ease;
             text-align: center;
+            text-decoration: none;
         }
 
-        .btn-main:active { transform: scale(0.98); }
+        .btn-main:active { transform: scale(0.96); }
 
-        /* Pantalla de inicio */
-        .welcome-overlay {
+        /* Overlay de inicio */
+        .start-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(0,0,0,0.8);
-            z-index: 50;
+            background: rgba(0,0,0,0.7);
             display: flex;
             align-items: center;
             justify-content: center;
+            z-index: 100;
             cursor: pointer;
         }
     </style>
@@ -154,10 +154,10 @@
 
 <div class="phone-section">
     <div class="phone-frame">
-        <div class="welcome-overlay" id="welcome" onclick="startTutorial()">
+        <div class="start-overlay" id="startBtn" onclick="initTuto()">
             <div style="text-align:center; color:white">
-                <div style="font-size:40px; margin-bottom:10px">▶</div>
-                <p style="font-family:'Syne'; font-size:12px">TOCÁ PARA EMPEZAR</p>
+                <div style="font-size:50px">▶</div>
+                <p style="font-family:'Syne'; font-size:11px; margin-top:10px; letter-spacing:2px">EMPEZAR TUTORIAL</p>
             </div>
         </div>
 
@@ -165,105 +165,103 @@
             <div class="progress-segments" id="progressSegments"></div>
         </div>
 
-        <video id="tutoVideo" playsinline>
+        <video id="v" playsinline>
             <source src="https://res.cloudinary.com/ds2udm1nc/video/upload/v1775641154/XRecorder_20260408_01_3_erklpv.mp4" type="video/mp4">
         </video>
     </div>
 </div>
 
 <div class="info-section">
-    <span class="step-tag" id="stepTag">Paso 1</span>
-    <h2 class="step-title">
-        <span id="stepEmoji">📱</span>
-        <span id="stepTitle">Notificación</span>
-    </h2>
-    <p class="step-desc" id="stepDesc">
-        Recibís el pack del mes directo en tu WhatsApp con todo listo.
-    </p>
+    <div id="content-area">
+        <div class="step-tag" id="tag">Paso 1 de 7</div>
+        <h2 class="step-title">
+            <span id="emoji">📱</span>
+            <span id="title">Notificación</span>
+        </h2>
+        <p class="step-desc" id="desc">
+            Recibís el pack del mes con todo el contenido directo en tu WhatsApp.
+        </p>
+    </div>
     
-    <button class="btn-main" onclick="nextStep()" id="btnNext">Siguiente Paso →</button>
+    <button class="btn-main" onclick="handleNext()" id="mainBtn">Siguiente Paso →</button>
 </div>
 
 <script>
-    const video = document.getElementById('tutoVideo');
+    const video = document.getElementById('v');
     const steps = [
-        { time: 0, title: "Notificación", desc: "Recibís el pack del mes con contenido listo para publicar por WhatsApp.", emoji: "📱" },
-        { time: 8, title: "Selección", desc: "Entrás al link del pack y elegís el contenido de la semana.", emoji: "👆" },
-        { time: 16, title: "El Gancho", desc: "Elegís la imagen o video que más se adapte a tu oferta.", emoji: "🧲" },
-        { time: 24, title: "Preparación", desc: "Descargás el material y copiás tu micro-landing de venta.", emoji: "⬇️" },
-        { time: 34, title: "Vinculación", desc: "Subís la historia a Instagram y pegás el enlace en el sticker.", emoji: "🔗" },
-        { time: 48, title: "Publicación", desc: "Tu historia ya está en línea atrayendo posibles clientes.", emoji: "📢" },
-        { time: 58, title: "Conversión", desc: "El cliente ve tu promo y te escribe directo al WhatsApp para comprar.", emoji: "💰" }
+        { t: 0, title: "Notificación", desc: "Recibís el pack del mes con contenido listo para publicar por WhatsApp.", e: "📱" },
+        { t: 8, title: "Selección", desc: "Entrás al link del pack y elegís el contenido de la semana.", e: "👆" },
+        { t: 16, title: "El Gancho", desc: "Elegís la imagen o video que más se adapte a tu oferta del día.", e: "🧲" },
+        { t: 24, title: "Preparación", desc: "Descargás el material y copiás tu enlace de venta personalizado.", e: "⬇️" },
+        { t: 34, title: "Vinculación", desc: "Subís la historia a Instagram y pegás el enlace en el sticker de link.", e: "🔗" },
+        { t: 48, title: "Publicación", desc: "¡Listo! Tu historia ya está trabajando para atraer clientes.", e: "📢" },
+        { t: 58, title: "¡Venta!", desc: "El cliente ve tu historia y te escribe directo al WhatsApp para comprar.", e: "💰" }
     ];
 
-    let currentStep = 0;
+    let current = 0;
 
-    // Generar barritas de progreso
-    const segmentsContainer = document.getElementById('progressSegments');
+    // Crear barritas
+    const segs = document.getElementById('progressSegments');
     steps.forEach(() => {
-        const div = document.createElement('div');
-        div.className = 'segment';
-        div.innerHTML = '<div class="segment-fill"></div>';
-        segmentsContainer.appendChild(div);
+        const d = document.createElement('div');
+        d.className = 'segment';
+        d.innerHTML = '<div class="segment-fill"></div>';
+        segs.appendChild(d);
     });
 
-    function startTutorial() {
-        document.getElementById('welcome').style.display = 'none';
+    function initTuto() {
+        document.getElementById('startBtn').style.display = 'none';
         video.play();
     }
 
     video.ontimeupdate = () => {
-        const time = video.currentTime;
-        const segments = document.querySelectorAll('.segment');
+        const now = video.currentTime;
+        const s = document.querySelectorAll('.segment');
         
         steps.forEach((step, i) => {
-            const nextTime = steps[i+1] ? steps[i+1].time : video.duration;
-            const fill = segments[i].querySelector('.segment-fill');
+            const nextT = steps[i+1] ? steps[i+1].t : video.duration;
+            const f = s[i].querySelector('.segment-fill');
             
-            if (time > step.time) {
-                if (time < nextTime) {
-                    segments[i].classList.add('active');
-                    const progress = ((time - step.time) / (nextTime - step.time)) * 100;
-                    fill.style.width = `${progress}%`;
-                    if (currentStep !== i) {
-                        currentStep = i;
-                        updateUI();
-                    }
+            if (now > step.t) {
+                if (now < nextT) {
+                    s[i].classList.add('active');
+                    f.style.width = `${((now - step.t) / (nextT - step.t)) * 100}%`;
+                    if (current !== i) { current = i; updateUI(); }
                 } else {
-                    segments[i].classList.remove('active');
-                    segments[i].classList.add('complete');
-                    fill.style.width = '100%';
+                    s[i].classList.remove('active');
+                    s[i].classList.add('complete');
+                    f.style.width = '100%';
                 }
             } else {
-                segments[i].classList.remove('active', 'complete');
-                fill.style.width = '0%';
+                s[i].classList.remove('active', 'complete');
+                f.style.width = '0%';
             }
         });
     };
 
     function updateUI() {
-        const step = steps[currentStep];
-        document.getElementById('stepTag').innerText = `Paso ${currentStep + 1} de ${steps.length}`;
-        document.getElementById('stepEmoji').innerText = step.emoji;
-        document.getElementById('stepTitle').innerText = step.title;
-        document.getElementById('stepDesc').innerText = step.desc;
+        const st = steps[current];
+        document.getElementById('tag').innerText = `Paso ${current + 1} de ${steps.length}`;
+        document.getElementById('emoji').innerText = st.e;
+        document.getElementById('title').innerText = st.title;
+        document.getElementById('desc').innerText = st.desc;
         
-        const btn = document.getElementById('btnNext');
-        if(currentStep === steps.length - 1) {
-            btn.innerText = "¡Empezar ahora!";
-            btn.style.background = "#25D366"; // Color WhatsApp
+        const b = document.getElementById('mainBtn');
+        if(current === steps.length - 1) {
+            b.innerText = "¡QUIERO EMPEZAR!";
+            b.style.background = "#25D366";
         } else {
-            btn.innerText = "Siguiente Paso →";
-            btn.style.background = "#FF2D7C";
+            b.innerText = "Siguiente Paso →";
+            b.style.background = "#FF2D7C";
         }
     }
 
-    function nextStep() {
-        if (currentStep < steps.length - 1) {
-            video.currentTime = steps[currentStep + 1].time;
+    function handleNext() {
+        if (current < steps.length - 1) {
+            video.currentTime = steps[current + 1].t;
             video.play();
         } else {
-            alert("¡Redirigiendo al servicio!");
+            window.location.href = "#"; // Link final
         }
     }
 </script>
