@@ -8,49 +8,35 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;700&display=swap');
 
-        :root { color-scheme: light only; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         html, body {
             width: 100%; height: 100%;
-            background: #000;
-            font-family: 'DM Sans', sans-serif;
-            forced-color-adjust: none;
-            -webkit-forced-color-adjust: none;
-        }
-
-        /* ── LAYOUT PRINCIPAL: columna que llena la pantalla ── */
-        .layout {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            height: 100dvh; /* usa dynamic viewport height en mobile */
-        }
-
-        /* ── VIDEO: 60% de la pantalla ── */
-        .bloque-video {
-            position: relative;
-            width: 100%;
-            flex: 0 0 55%;
-            background: #000;
             overflow: hidden;
+            background: #000;
         }
 
+        /* VIDEO FULLSCREEN */
         video {
+            position: fixed;
+            top: 0; left: 0;
             width: 100%; height: 100%;
-            object-fit: cover; object-position: center center; display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            object-position: center;
+            z-index: 1;
         }
 
-        /* Barras de progreso sobre el video */
-        .barras-video {
-            position: absolute;
+        /* BARRAS DE PROGRESO */
+        .barras {
+            position: fixed;
             top: 14px; left: 14px; right: 14px;
-            display: flex; gap: 4px; z-index: 10;
+            display: flex; gap: 4px;
+            z-index: 10;
         }
 
         .barra-seg {
             flex: 1; height: 3px;
-            background: rgba(255,255,255,0.25);
+            background: rgba(255,255,255,0.3);
             border-radius: 2px; overflow: hidden;
         }
 
@@ -58,63 +44,78 @@
         .barra-seg.activa .barra-relleno { background: #FFD600; }
         .barra-seg.completa .barra-relleno { width: 100% !important; background: #FF2D7C; }
 
-        /* Play overlay */
+        /* PLAY OVERLAY */
         .play-overlay {
-            position: absolute; inset: 0;
-            background: rgba(0,0,0,0.7);
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.65);
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
-            gap: 12px; z-index: 30; cursor: pointer;
+            gap: 14px; z-index: 20; cursor: pointer;
         }
 
         .play-circle {
-            width: 64px; height: 64px;
+            width: 72px; height: 72px;
             background: linear-gradient(135deg, #FF2D7C, #FFD600);
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 24px; color: #fff;
+            font-size: 28px; color: #fff;
             animation: pulso 2s infinite;
         }
 
         .play-overlay span {
             font-family: 'Syne', sans-serif;
             font-size: 11px; font-weight: 700;
-            color: rgba(255,255,255,0.6);
+            color: rgba(255,255,255,0.7);
             letter-spacing: 2px; text-transform: uppercase;
         }
 
         .play-overlay.oculto {
             opacity: 0; pointer-events: none;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.4s;
         }
 
         @keyframes pulso {
-            0%, 100% { box-shadow: 0 0 20px rgba(255,45,124,0.4); }
-            50%       { box-shadow: 0 0 50px rgba(255,45,124,0.8); }
+            0%, 100% { box-shadow: 0 0 20px rgba(255,45,124,0.5); }
+            50%       { box-shadow: 0 0 50px rgba(255,45,124,0.9); }
         }
 
-        /* ── PANEL BLANCO: 40% restante ── */
-        .bloque-texto {
-            flex: 0 0 45%;
+        /* BURBUJA FLOTANTE */
+        .burbuja {
+            position: fixed;
+            bottom: 16px;
+            left: 16px; right: 16px;
             background: #ffffff;
-            border-radius: 24px 24px 0 0;
-            margin-top: -20px;
-            position: relative;
-            z-index: 10;
-            padding: 20px 22px 24px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+            border-radius: 24px;
+            padding: 12px 16px 12px;
+            z-index: 15;
+            box-shadow:
+                0 8px 32px rgba(0,0,0,0.25),
+                0 2px 8px rgba(0,0,0,0.15);
+            /* Animación de entrada */
+            animation: subir 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+        }
+
+        @keyframes subir {
+            from { opacity: 0; transform: translateY(20px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .burbuja.cambiando {
+            animation: bajar 0.25s ease forwards;
+        }
+
+        @keyframes bajar {
+            to { opacity: 0; transform: translateY(12px) scale(0.97); }
         }
 
         /* Pill */
-        .pill-paso {
+        .pill {
             display: inline-flex; align-items: center; gap: 6px;
             background: #fff0f5; border: 1.5px solid #FFD6E8;
             border-radius: 100px; padding: 4px 12px;
             font-size: 11px; font-weight: 700; color: #FF2D7C;
-            font-family: 'Syne', sans-serif; letter-spacing: 0.3px;
-            margin-bottom: 12px; width: fit-content;
+            font-family: 'Syne', sans-serif;
+            margin-bottom: 6px;
         }
 
         .pill-dot {
@@ -127,125 +128,82 @@
         }
 
         /* Título */
-        .titulo-paso {
+        .titulo {
             font-family: 'Syne', sans-serif;
-            font-size: 24px; font-weight: 800; color: #111111;
-            line-height: 1.2; margin-bottom: 6px;
+            font-size: 18px; font-weight: 800; color: #111;
             display: flex; align-items: center; gap: 8px;
+            margin-bottom: 4px; line-height: 1.2;
         }
 
         /* Línea color */
-        .linea-color {
-            width: 36px; height: 4px; border-radius: 2px;
-            margin-bottom: 10px; transition: background 0.4s;
+        .linea {
+            width: 32px; height: 4px; border-radius: 2px;
+            margin-bottom: 6px;
         }
 
         /* Descripción */
-        .desc-paso {
-            font-size: 14px; line-height: 1.6; color: #555555;
-            flex-grow: 1; margin-bottom: 14px;
+        .desc {
+            font-size: 13px; line-height: 1.5; color: #555;
+            margin-bottom: 10px;
         }
 
-        /* Dots */
-        .dots-progreso { display: flex; gap: 5px; margin-bottom: 14px; }
-
-        .dots-progreso span {
-            width: 7px; height: 7px; border-radius: 50%;
-            background: #E8E8E8; transition: all 0.3s;
-        }
-
-        .dots-progreso span.hecho { background: #FF2D7C; }
-        .dots-progreso span.actual {
-            background: #FF2D7C; width: 20px; border-radius: 4px;
-        }
-
-        /* Botón */
-        .btn-siguiente {
-            width: 100%; padding: 14px;
-            background: #FF2D7C; color: #fff;
-            border: none; border-radius: 12px;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 15px; font-weight: 700;
-            cursor: pointer; -webkit-appearance: none;
-            box-shadow: 0 4px 20px rgba(255,45,124,0.3);
-            transition: transform 0.15s;
-            flex-shrink: 0;
-        }
-
-        .btn-siguiente:active { transform: scale(0.97); }
-        .btn-siguiente.verde {
-            background: #25D366;
-            box-shadow: 0 4px 20px rgba(37,211,102,0.3);
-        }
+        
     </style>
 </head>
 <body>
-<div class="layout">
 
-    <!-- VIDEO FULL WIDTH -->
-    <div class="bloque-video">
-        <div class="play-overlay" id="playOverlay" onclick="iniciar()">
-            <div class="play-circle">▶</div>
-            <span>Empezar tutorial</span>
-        </div>
-        <div class="barras-video" id="barrasVideo"></div>
-        <video id="vid" playsinline muted>
-            <source src="https://res.cloudinary.com/ds2udm1nc/video/upload/v1775641154/XRecorder_20260408_01_3_erklpv.mp4" type="video/mp4">
-        </video>
+    <video id="vid" playsinline muted loop>
+        <source src="https://res.cloudinary.com/ds2udm1nc/video/upload/v1775641154/XRecorder_20260408_01_3_erklpv.mp4" type="video/mp4">
+    </video>
+
+    <div class="barras" id="barras"></div>
+
+    <div class="play-overlay oculto" id="playOverlay">
+        <div class="play-circle">▶</div>
+        <span>Empezar tutorial</span>
     </div>
 
-    <!-- PANEL BLANCO -->
-    <div class="bloque-texto">
+    <div class="burbuja" id="burbuja">
 
-        <div class="pill-paso">
+        <div class="pill">
             <span class="pill-dot"></span>
             <span id="labelPaso">Paso 1 de 7</span>
         </div>
 
-        <h2 class="titulo-paso">
-            <span id="emojiPaso">📱</span>
-            <span id="tituloPaso">Notificación</span>
-        </h2>
-
-        <div class="linea-color" id="lineaColor" style="background:#25D366"></div>
-
-        <p class="desc-paso" id="descPaso">
-            Recibís el pack del mes con todo el contenido listo para publicar por WhatsApp.
-        </p>
-
-        <div class="dots-progreso" id="dotsProgreso">
-            <span class="actual"></span>
-            <span></span><span></span><span></span><span></span><span></span><span></span>
+        <div class="titulo">
+            <span id="emoji">📱</span>
+            <span id="titulo">Notificación</span>
         </div>
 
-        <button class="btn-siguiente" id="btnSig" onclick="siguiente()">
-            Siguiente Paso →
-        </button>
+        <div class="linea" id="linea" style="background:#25D366"></div>
 
+        <p class="desc" id="desc">
+            Recibís el pack del mes con todo el contenido listo para publicar por WhatsApp.
+        </p>
     </div>
-</div>
 
 <script>
     const vid = document.getElementById('vid');
 
     const pasos = [
-        { t: 0,  e: '📱', titulo: 'Notificación', desc: 'Recibís el pack del mes con todo el contenido listo para publicar por WhatsApp.',             color: '#25D366' },
-        { t: 8,  e: '👆', titulo: 'Selección',    desc: 'Entrás al link del pack y elegís el contenido de la semana para tu negocio.',                 color: '#0088cc' },
-        { t: 16, e: '🧲', titulo: 'El Gancho',    desc: 'Elegís la imagen o video que más se adapte a tu oferta del día para captar la atención.',     color: '#FF9900' },
-        { t: 24, e: '⬇️', titulo: 'Preparación', desc: 'Descargás el material y copiás tu enlace de venta personalizado del micro-landing.',           color: '#FF2D7C' },
-        { t: 34, e: '🔗', titulo: 'Vinculación',  desc: 'Subís la historia a Instagram y pegás el enlace en el sticker de link.',                       color: '#E1306C' },
-        { t: 48, e: '📢', titulo: 'Publicación',  desc: '¡Listo! Tu historia ya está publicada y trabajando para atraer clientes.',                     color: '#833AB4' },
-        { t: 58, e: '💰', titulo: '¡Venta!',      desc: 'El cliente ve tu historia, hace clic y te escribe directo al WhatsApp para comprar.',          color: '#FFD600' },
+        { t: 0,  e: '📱', titulo: 'Notificación', desc: 'Recibís el pack del mes con todo el contenido listo para publicar por WhatsApp.',            color: '#25D366' },
+        { t: 8,  e: '👆', titulo: 'Selección',    desc: 'Entrás al link del pack y elegís el contenido de la semana para tu negocio.',                color: '#0088cc' },
+        { t: 16, e: '🧲', titulo: 'El Gancho',    desc: 'Elegís la imagen o video que más se adapte a tu oferta del día.',                            color: '#FF9900' },
+        { t: 24, e: '⬇️', titulo: 'Preparación', desc: 'Descargás el material y copiás tu enlace de venta personalizado del micro-landing.',          color: '#FF2D7C' },
+        { t: 34, e: '🔗', titulo: 'Vinculación',  desc: 'Subís la historia a Instagram y pegás el enlace en el sticker de link.',                      color: '#E1306C' },
+        { t: 48, e: '📢', titulo: 'Publicación',  desc: '¡Listo! Tu historia ya está publicada y trabajando para atraer clientes.',                    color: '#833AB4' },
+        { t: 58, e: '💰', titulo: '¡Venta!',      desc: 'El cliente ve tu historia, hace clic y te escribe directo al WhatsApp para comprar.',         color: '#FFD600' },
     ];
 
     let actual = 0;
 
-    const barrasCont = document.getElementById('barrasVideo');
+    // Crear barras
+    const barrasCont = document.getElementById('barras');
     pasos.forEach(() => {
-        const seg = document.createElement('div');
-        seg.className = 'barra-seg';
-        seg.innerHTML = '<div class="barra-relleno"></div>';
-        barrasCont.appendChild(seg);
+        const s = document.createElement('div');
+        s.className = 'barra-seg';
+        s.innerHTML = '<div class="barra-relleno"></div>';
+        barrasCont.appendChild(s);
     });
 
     function iniciar() {
@@ -256,25 +214,11 @@
     function actualizarPanel(i) {
         const p = pasos[i];
         document.getElementById('labelPaso').textContent = `Paso ${i + 1} de ${pasos.length}`;
-        document.getElementById('emojiPaso').textContent = p.e;
-        document.getElementById('tituloPaso').textContent = p.titulo;
-        document.getElementById('descPaso').textContent = p.desc;
-        document.getElementById('lineaColor').style.background = p.color;
-
-        document.querySelectorAll('.dots-progreso span').forEach((d, idx) => {
-            d.className = '';
-            if (idx < i) d.classList.add('hecho');
-            else if (idx === i) d.classList.add('actual');
-        });
-
-        const btn = document.getElementById('btnSig');
-        if (i === pasos.length - 1) {
-            btn.textContent = '¡QUIERO EMPEZAR! 🚀';
-            btn.classList.add('verde');
-        } else {
-            btn.textContent = 'Siguiente Paso →';
-            btn.classList.remove('verde');
-        }
+        document.getElementById('emoji').textContent = p.e;
+        document.getElementById('titulo').textContent = p.titulo;
+        document.getElementById('desc').textContent = p.desc;
+        document.getElementById('linea').style.background = p.color;
+    }
     }
 
     vid.addEventListener('timeupdate', () => {
@@ -296,16 +240,8 @@
         });
     });
 
-    function siguiente() {
-        if (actual < pasos.length - 1) {
-            actual++;
-            vid.currentTime = pasos[actual].t;
-            vid.play().catch(() => {});
-            actualizarPanel(actual);
-        }
-    }
-
     actualizarPanel(0);
+    vid.play().catch(() => {});
 </script>
 </body>
 </html>
