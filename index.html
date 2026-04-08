@@ -3,211 +3,366 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="color-scheme" content="light">
+    <meta name="color-scheme" content="light only">
     <title>Tutorial Story2Action</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;700&display=swap');
 
+        :root { color-scheme: light only; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* Fondo de la página forzado a gris claro */
+        html { background: #f0f2f5; }
+
         body {
-            background-color: #f0f2f5 !important;
             font-family: 'DM Sans', sans-serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            align-items: center;
+            background: #f0f2f5;
+            forced-color-adjust: none;
+            -webkit-forced-color-adjust: none;
         }
 
-        /* Área del celular: Siempre negra */
-        .seccion-video {
-            background-color: #000000 !important;
+        .wrapper {
             width: 100%;
+            max-width: 430px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ── SECCIÓN VIDEO ── */
+        .seccion-video {
+            width: 100%;
+            background: #111111;
             display: flex;
             justify-content: center;
-            padding: 20px 0 45px 0;
-            position: relative;
+            padding: 24px 24px 0;
+            flex-shrink: 0;
         }
 
         .celular {
-            width: 250px;
-            height: 500px;
+            width: 220px;
+            height: 420px;
             background: #000;
-            border-radius: 35px;
+            border-radius: 30px;
             overflow: hidden;
-            border: 6px solid #222;
+            border: 5px solid #2a2a2a;
             position: relative;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
         }
 
-        video { width: 100%; height: 100%; object-fit: cover; }
+        video {
+            width: 100%; height: 100%;
+            object-fit: cover; display: block;
+        }
 
-        /* AREA BLANCA: Aquí es donde aplicamos el blindaje */
-        .seccion-texto {
+        .barras-video {
+            position: absolute;
+            top: 10px; left: 10px; right: 10px;
+            display: flex; gap: 3px; z-index: 10;
+        }
+
+        .barra-seg {
+            flex: 1; height: 3px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px; overflow: hidden;
+        }
+
+        .barra-relleno { height: 100%; width: 0%; background: #FF2D7C; }
+        .barra-seg.activa .barra-relleno { background: #FFD600; }
+        .barra-seg.completa .barra-relleno { width: 100% !important; background: #FF2D7C; }
+
+        .play-overlay {
+            position: absolute; inset: 0;
+            background: rgba(0,0,0,0.75);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 10px; z-index: 30; cursor: pointer;
+        }
+
+        .play-circle {
+            width: 54px; height: 54px;
+            background: linear-gradient(135deg, #FF2D7C, #FFD600);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; color: #fff;
+            animation: pulso 2s infinite;
+        }
+
+        .play-overlay p {
+            font-family: 'Syne', sans-serif;
+            font-size: 10px; font-weight: 700;
+            color: rgba(255,255,255,0.6);
+            letter-spacing: 1.5px; text-transform: uppercase;
+        }
+
+        .play-overlay.oculto {
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        @keyframes pulso {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,45,124,0.4); }
+            50%       { box-shadow: 0 0 40px rgba(255,45,124,0.8); }
+        }
+
+        /* ── CURVA CONECTORA ── */
+        .conector {
             width: 100%;
-            /* Usamos background-color e important para que no lo cambie */
-            background-color: #ffffff !important; 
-            background: #ffffff !important;
-            padding: 40px 25px;
-            border-radius: 30px 30px 0 0;
-            margin-top: -30px;
-            z-index: 100;
+            background: #111111;
+            flex-shrink: 0;
+        }
+
+        .conector-curva {
+            height: 32px;
+            background: #ffffff;
+            border-radius: 28px 28px 0 0;
+        }
+
+        /* ── PANEL TEXTO BLANCO ── */
+        .panel-texto {
+            width: 100%;
+            background-color: #ffffff;
+            color: #111111;
             flex-grow: 1;
+            padding: 4px 24px 48px;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 -15px 30px rgba(0,0,0,0.05);
         }
 
-        /* Forzamos colores de texto específicos para que no se pongan blancos */
-        .texto-paso {
-            color: #FF2D7C !important;
+        .pill-paso {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #fff0f5;
+            border: 1.5px solid #FFD6E8;
+            border-radius: 100px;
+            padding: 5px 14px;
+            font-size: 12px; font-weight: 700;
+            color: #FF2D7C;
             font-family: 'Syne', sans-serif;
-            font-size: 13px;
-            font-weight: 800;
-            margin-bottom: 8px;
-            display: block;
+            letter-spacing: 0.3px;
+            margin-bottom: 16px;
+            width: fit-content;
+        }
+
+        .pill-dot {
+            width: 6px; height: 6px;
+            background: #FF2D7C;
+            border-radius: 50%;
+            animation: parpadeo 1.5s infinite;
+        }
+
+        @keyframes parpadeo {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.3; }
         }
 
         .titulo-paso {
-            color: #111111 !important;
             font-family: 'Syne', sans-serif;
-            font-size: 26px;
+            font-size: 28px; font-weight: 800;
+            color: #111111;
+            line-height: 1.2;
             margin-bottom: 12px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .descripcion-paso {
-            color: #333333 !important;
-            font-size: 16px;
-            line-height: 1.6;
-            margin-bottom: 30px;
+        .linea-color {
+            width: 40px; height: 4px;
+            border-radius: 2px;
+            margin-bottom: 16px;
+            transition: background 0.4s ease;
         }
 
-        .boton-accion {
-            background-color: #FF2D7C !important;
-            color: #ffffff !important;
+        .desc-paso {
+            font-size: 15px;
+            line-height: 1.65;
+            color: #555555;
+            flex-grow: 1;
+            margin-bottom: 24px;
+        }
+
+        .dots-progreso {
+            display: flex; gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .dots-progreso span {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: #E8E8E8;
+            transition: all 0.3s ease;
+        }
+
+        .dots-progreso span.hecho { background: #FF2D7C; }
+        .dots-progreso span.actual {
+            background: #FF2D7C;
+            width: 24px; border-radius: 4px;
+        }
+
+        .btn-siguiente {
+            width: 100%;
+            padding: 16px;
+            background: #FF2D7C;
+            color: #ffffff;
             border: none;
-            padding: 18px;
-            border-radius: 15px;
-            font-weight: 700;
-            font-size: 16px;
-            text-align: center;
+            border-radius: 14px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 16px; font-weight: 700;
             cursor: pointer;
-            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 6px 24px rgba(255, 45, 124, 0.3);
+            -webkit-appearance: none;
+            transition: transform 0.15s;
         }
 
-        /* UI Video */
-        .progreso-contenedor {
-            position: absolute;
-            top: 15px; left: 15px; right: 15px;
-            display: flex; gap: 4px; z-index: 10;
-        }
-        .barra { flex: 1; height: 3px; background: rgba(255,255,255,0.2); border-radius: 2px; overflow: hidden; }
-        .barra-llena { height: 100%; width: 0%; background: #FF2D7C; }
-        .barra.activa .barra-llena { background: #FFD600; }
-        .barra.completa .barra-llena { width: 100%; background: #FF2D7C; }
+        .btn-siguiente:active { transform: scale(0.97); }
 
-        .play-overlay {
-            position: absolute; inset: 0; background: rgba(0,0,0,0.7);
-            display: flex; align-items: center; justify-content: center; z-index: 50;
+        .btn-siguiente.verde {
+            background: #25D366;
+            box-shadow: 0 6px 24px rgba(37, 211, 102, 0.3);
         }
     </style>
 </head>
-<body style="background-color: #f0f2f5 !important;">
+<body>
+<div class="wrapper">
 
-<div class="seccion-video">
-    <div class="celular">
-        <div class="play-overlay" id="overlay" onclick="iniciar()">
-            <div style="color:white; text-align:center">
-                <div style="font-size:40px">▶</div>
-                <p style="font-family:'Syne'; font-size:10px; letter-spacing:1px">EMPEZAR</p>
+    <div class="seccion-video">
+        <div class="celular">
+            <div class="play-overlay" id="playOverlay" onclick="iniciar()">
+                <div class="play-circle">▶</div>
+                <p>Empezar tutorial</p>
             </div>
+            <div class="barras-video" id="barrasVideo"></div>
+            <video id="vid" playsinline muted>
+                <source src="https://res.cloudinary.com/ds2udm1nc/video/upload/v1775641154/XRecorder_20260408_01_3_erklpv.mp4" type="video/mp4">
+            </video>
         </div>
-        <div class="progreso-contenedor" id="barras"></div>
-        <video id="vid" playsinline>
-            <source src="https://res.cloudinary.com/ds2udm1nc/video/upload/v1775641154/XRecorder_20260408_01_3_erklpv.mp4" type="video/mp4">
-        </video>
+    </div>
+
+    <div class="conector">
+        <div class="conector-curva"></div>
+    </div>
+
+    <div class="panel-texto">
+
+        <div class="pill-paso">
+            <span class="pill-dot"></span>
+            <span id="labelPaso">Paso 1 de 7</span>
+        </div>
+
+        <h2 class="titulo-paso">
+            <span id="emojiPaso">📱</span>
+            <span id="tituloPaso">Notificación</span>
+        </h2>
+
+        <div class="linea-color" id="lineaColor" style="background:#25D366"></div>
+
+        <p class="desc-paso" id="descPaso">
+            Recibís el pack del mes con todo el contenido listo para publicar por WhatsApp.
+        </p>
+
+        <div class="dots-progreso" id="dotsProgreso">
+            <span class="actual"></span>
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+
+        <button class="btn-siguiente" id="btnSig" onclick="siguiente()">
+            Siguiente Paso →
+        </button>
+
     </div>
 </div>
 
-<div class="seccion-texto" style="background-color: #ffffff !important;">
-    <span class="texto-paso" id="label">Paso 1 de 7</span>
-    <h2 class="titulo-paso">
-        <span id="emoji">📱</span>
-        <span id="titulo" style="color: #111111 !important;">Notificación</span>
-    </h2>
-    <p class="descripcion-paso" id="desc" style="color: #333333 !important;">
-        Recibís el pack del mes con todo el contenido directo en tu WhatsApp.
-    </p>
-    
-    <button class="boton-accion" onclick="saltar()" id="btn" style="background-color: #FF2D7C !important; color: #ffffff !important;">
-        Siguiente Paso →
-    </button>
-</div>
-
 <script>
-    const v = document.getElementById('vid');
-    const steps = [
-        { t: 0, title: "Notificación", desc: "Recibís el pack del mes con contenido listo para publicar por WhatsApp.", e: "📱" },
-        { t: 8, title: "Selección", desc: "Entrás al link del pack y elegís el contenido de la semana.", e: "👆" },
-        { t: 16, title: "El Gancho", desc: "Elegís la imagen o video que más se adapte a tu oferta del día.", e: "🧲" },
-        { t: 24, title: "Preparación", desc: "Descargás el material y copiás tu enlace de venta personalizado.", e: "⬇️" },
-        { t: 34, title: "Vinculación", desc: "Subís la historia a Instagram y pegás el enlace en el sticker de link.", e: "🔗" },
-        { t: 48, title: "Publicación", desc: "¡Listo! Tu historia ya está trabajando para atraer clientes.", e: "📢" },
-        { t: 58, title: "¡Venta!", desc: "El cliente ve tu historia y te escribe directo al WhatsApp para comprar.", e: "💰" }
+    const vid = document.getElementById('vid');
+
+    const pasos = [
+        { t: 0,  e: '📱', titulo: 'Notificación', desc: 'Recibís el pack del mes con todo el contenido listo para publicar por WhatsApp.',              color: '#25D366' },
+        { t: 8,  e: '👆', titulo: 'Selección',    desc: 'Entrás al link del pack y elegís el contenido de la semana para tu negocio.',                  color: '#0088cc' },
+        { t: 16, e: '🧲', titulo: 'El Gancho',    desc: 'Elegís la imagen o video que más se adapte a tu oferta del día para captar la atención.',      color: '#FF9900' },
+        { t: 24, e: '⬇️', titulo: 'Preparación', desc: 'Descargás el material y copiás tu enlace de venta personalizado del micro-landing.',            color: '#FF2D7C' },
+        { t: 34, e: '🔗', titulo: 'Vinculación',  desc: 'Subís la historia a Instagram y pegás el enlace en el sticker de link.',                        color: '#E1306C' },
+        { t: 48, e: '📢', titulo: 'Publicación',  desc: '¡Listo! Tu historia ya está publicada y trabajando para atraer clientes.',                      color: '#833AB4' },
+        { t: 58, e: '💰', titulo: '¡Venta!',      desc: 'El cliente ve tu historia, hace clic y te escribe directo al WhatsApp para comprar.',           color: '#FFD600' },
     ];
 
-    let current = 0;
-    const cont = document.getElementById('barras');
-    steps.forEach(() => {
-        const d = document.createElement('div');
-        d.className = 'barra'; d.innerHTML = '<div class="barra-llena"></div>';
-        cont.appendChild(d);
+    let actual = 0;
+
+    // Crear barras
+    const barrasCont = document.getElementById('barrasVideo');
+    pasos.forEach(() => {
+        const seg = document.createElement('div');
+        seg.className = 'barra-seg';
+        seg.innerHTML = '<div class="barra-relleno"></div>';
+        barrasCont.appendChild(seg);
     });
 
-    function iniciar() { document.getElementById('overlay').style.display='none'; v.play(); }
+    function iniciar() {
+        document.getElementById('playOverlay').classList.add('oculto');
+        vid.play().catch(() => {});
+    }
 
-    v.ontimeupdate = () => {
-        const time = v.currentTime;
-        const b = document.querySelectorAll('.barra');
-        steps.forEach((s, i) => {
-            const nextT = steps[i+1] ? steps[i+1].t : v.duration;
-            const fill = b[i].querySelector('.barra-llena');
-            if (time > s.t) {
-                if (time < nextT) {
-                    b[i].classList.add('activa');
-                    fill.style.width = `${((time - s.t) / (nextT - s.t)) * 100}%`;
-                    if (current !== i) { current = i; updateUI(); }
-                } else {
-                    b[i].classList.remove('activa');
-                    b[i].classList.add('completa');
-                    fill.style.width = '100%';
-                }
-            } else { b[i].classList.remove('activa', 'completa'); fill.style.width = '0%'; }
+    function actualizarPanel(i) {
+        const p = pasos[i];
+        document.getElementById('labelPaso').textContent = `Paso ${i + 1} de ${pasos.length}`;
+        document.getElementById('emojiPaso').textContent = p.e;
+        document.getElementById('tituloPaso').textContent = p.titulo;
+        document.getElementById('descPaso').textContent = p.desc;
+        document.getElementById('lineaColor').style.background = p.color;
+
+        document.querySelectorAll('.dots-progreso span').forEach((d, idx) => {
+            d.className = '';
+            if (idx < i) d.classList.add('hecho');
+            else if (idx === i) d.classList.add('actual');
         });
-    };
 
-    function updateUI() {
-        const s = steps[current];
-        document.getElementById('label').innerText = `Paso ${current + 1} de ${steps.length}`;
-        document.getElementById('emoji').innerText = s.e;
-        document.getElementById('titulo').innerText = s.title;
-        document.getElementById('desc').innerText = s.desc;
-        const btn = document.getElementById('btn');
-        if(current === steps.length - 1) {
-            btn.innerText = "¡QUIERO EMPEZAR!";
-            btn.style.setProperty('background-color', '#25D366', 'important');
+        const btn = document.getElementById('btnSig');
+        if (i === pasos.length - 1) {
+            btn.textContent = '¡QUIERO EMPEZAR! 🚀';
+            btn.classList.add('verde');
         } else {
-            btn.innerText = "Siguiente Paso →";
-            btn.style.setProperty('background-color', '#FF2D7C', 'important');
+            btn.textContent = 'Siguiente Paso →';
+            btn.classList.remove('verde');
         }
     }
 
-    function saltar() {
-        if (current < steps.length - 1) { v.currentTime = steps[current + 1].t; v.play(); }
+    vid.addEventListener('timeupdate', () => {
+        const t = vid.currentTime;
+        const barras = document.querySelectorAll('.barra-seg');
+        pasos.forEach((p, i) => {
+            const nextT = pasos[i + 1] ? pasos[i + 1].t : (vid.duration || 999);
+            const relleno = barras[i].querySelector('.barra-relleno');
+            barras[i].classList.remove('activa', 'completa');
+            if (t >= nextT) {
+                barras[i].classList.add('completa');
+            } else if (t >= p.t) {
+                barras[i].classList.add('activa');
+                relleno.style.width = ((t - p.t) / (nextT - p.t) * 100) + '%';
+                if (actual !== i) { actual = i; actualizarPanel(i); }
+            } else {
+                relleno.style.width = '0%';
+            }
+        });
+    });
+
+    function siguiente() {
+        if (actual < pasos.length - 1) {
+            actual++;
+            vid.currentTime = pasos[actual].t;
+            vid.play().catch(() => {});
+            actualizarPanel(actual);
+        }
     }
+
+    actualizarPanel(0);
 </script>
 </body>
 </html>
