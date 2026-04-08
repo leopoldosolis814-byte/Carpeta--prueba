@@ -13,45 +13,49 @@
         html, body {
             width: 100%; height: 100%;
             overflow: hidden;
-            background: #000;
+            background: #111; /* Fondo oscuro detrás del video */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* VIDEO FULLSCREEN */
+        /* VIDEO AJUSTADO */
         video {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            object-fit: cover;
-            object-position: center;
+            /* Dejamos un margen del 10% arriba y abajo para que no choque con la UI */
+            top: 5%; left: 5%;
+            width: 90%; height: 80%; 
+            object-fit: contain; /* Para que se vea todo el video sin recortes */
             z-index: 1;
+            border-radius: 16px; /* Bordes redondeados para estética moderna */
         }
 
         /* BARRAS DE PROGRESO */
         .barras {
             position: fixed;
-            top: 14px; left: 14px; right: 14px;
+            top: 20px; left: 20px; right: 20px;
             display: flex; gap: 4px;
             z-index: 10;
         }
 
         .barra-seg {
             flex: 1; height: 3px;
-            background: rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.2);
             border-radius: 2px; overflow: hidden;
         }
 
-        .barra-relleno { height: 100%; width: 0%; background: #FF2D7C; transition: width 0.1s linear; }
+        .barra-relleno { height: 100%; width: 0%; background: #FF2D7C; }
         .barra-seg.activa .barra-relleno { background: #FFD600; }
         .barra-seg.completa .barra-relleno { width: 100% !important; background: #FF2D7C; }
 
         /* PLAY OVERLAY */
         .play-overlay {
             position: fixed; inset: 0;
-            background: rgba(0,0,0,0.65);
+            background: rgba(0,0,0,0.7);
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
             gap: 14px; z-index: 20; cursor: pointer;
-            opacity: 1; transition: opacity 0.4s;
+            transition: opacity 0.4s;
         }
 
         .play-circle {
@@ -66,35 +70,27 @@
         .play-overlay span {
             font-family: 'Syne', sans-serif;
             font-size: 11px; font-weight: 700;
-            color: rgba(255,255,255,0.7);
-            letter-spacing: 2px; text-transform: uppercase;
+            color: #fff; letter-spacing: 2px; text-transform: uppercase;
         }
 
-        .play-overlay.oculto {
-            opacity: 0; pointer-events: none;
-        }
+        .play-overlay.oculto { opacity: 0; pointer-events: none; }
 
         @keyframes pulso {
             0%, 100% { box-shadow: 0 0 20px rgba(255,45,124,0.5); }
-            50%       { box-shadow: 0 0 50px rgba(255,45,124,0.9); }
+            50%       { box-shadow: 0 0 40px rgba(255,45,124,0.8); }
         }
 
         /* BURBUJA FLOTANTE */
         .burbuja {
             position: fixed;
-            bottom: 16px;
-            left: 16px; right: 16px;
+            bottom: 30px; /* Un poco más arriba para que no tape botones del cel */
+            left: 20px; right: 20px;
             background: #ffffff;
             border-radius: 24px;
-            padding: 12px 16px 12px;
+            padding: 16px;
             z-index: 15;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-            animation: subir 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
-        }
-
-        @keyframes subir {
-            from { opacity: 0; transform: translateY(20px) scale(0.97); }
-            to   { opacity: 1; transform: translateY(0) scale(1); }
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            transition: opacity 0.3s ease;
         }
 
         .pill {
@@ -102,35 +98,24 @@
             background: #fff0f5; border: 1.5px solid #FFD6E8;
             border-radius: 100px; padding: 4px 12px;
             font-size: 11px; font-weight: 700; color: #FF2D7C;
-            font-family: 'Syne', sans-serif;
-            margin-bottom: 6px;
+            font-family: 'Syne', sans-serif; margin-bottom: 8px;
         }
 
-        .pill-dot {
-            width: 6px; height: 6px; background: #FF2D7C;
-            border-radius: 50%; animation: parpadeo 1.5s infinite;
-        }
-
-        @keyframes parpadeo {
-            0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
-        }
+        .pill-dot { width: 6px; height: 6px; background: #FF2D7C; border-radius: 50%; animation: parpadeo 1.5s infinite; }
+        @keyframes parpadeo { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
         .titulo {
             font-family: 'Syne', sans-serif;
             font-size: 18px; font-weight: 800; color: #111;
             display: flex; align-items: center; gap: 8px;
-            margin-bottom: 4px; line-height: 1.2;
-        }
-
-        .linea {
-            width: 32px; height: 4px; border-radius: 2px;
             margin-bottom: 6px;
         }
 
+        .linea { width: 40px; height: 4px; border-radius: 2px; margin-bottom: 8px; }
+
         .desc {
             font-family: 'DM Sans', sans-serif;
-            font-size: 13px; line-height: 1.5; color: #555;
-            margin-bottom: 10px;
+            font-size: 14px; line-height: 1.4; color: #444;
         }
     </style>
 </head>
@@ -144,22 +129,14 @@
 
     <div class="play-overlay" id="playOverlay">
         <div class="play-circle">▶</div>
-        <span>Empezar tutorial</span>
+        <span>Empezar tutorial lento</span>
     </div>
 
     <div class="burbuja" id="burbuja">
-        <div class="pill">
-            <span class="pill-dot"></span>
-            <span id="labelPaso">Paso 1 de 7</span>
-        </div>
-        <div class="titulo">
-            <span id="emoji">📱</span>
-            <span id="titulo">Notificación</span>
-        </div>
-        <div class="linea" id="linea" style="background:#25D366"></div>
-        <p class="desc" id="desc">
-            Recibís el pack del mes con todo el contenido listo para publicar por WhatsApp.
-        </p>
+        <div class="pill"><span class="pill-dot"></span><span id="labelPaso">Paso 1</span></div>
+        <div class="titulo"><span id="emoji">📱</span><span id="titulo">Cargando...</span></div>
+        <div class="linea" id="linea"></div>
+        <p class="desc" id="desc">Iniciando tutorial...</p>
     </div>
 
 <script>
@@ -167,19 +144,22 @@
     const playOverlay = document.getElementById('playOverlay');
     const burbuja = document.getElementById('burbuja');
 
+    // CONFIGURACIÓN DE VELOCIDAD (1.0 es normal, 0.75 es lento)
+    vid.playbackRate = 0.75;
+
     const pasos = [
         { t: 0,  e: '📱', titulo: 'Notificación', desc: 'Recibís el pack del mes con todo el contenido listo para publicar por WhatsApp.', color: '#25D366' },
         { t: 8,  e: '👆', titulo: 'Selección',    desc: 'Entrás al link del pack y elegís el contenido de la semana para tu negocio.', color: '#0088cc' },
         { t: 16, e: '🧲', titulo: 'El Gancho',    desc: 'Elegís la imagen o video que más se adapte a tu oferta del día.', color: '#FF9900' },
-        { t: 24, e: '⬇️', titulo: 'Preparación', desc: 'Descargás el material y copiás tu enlace de venta personalizado del micro-landing.', color: '#FF2D7C' },
+        { t: 24, e: '⬇️', titulo: 'Preparación', desc: 'Descargás el material y copiás tu enlace de venta personalizado.', color: '#FF2D7C' },
         { t: 34, e: '🔗', titulo: 'Vinculación',  desc: 'Subís la historia a Instagram y pegás el enlace en el sticker de link.', color: '#E1306C' },
         { t: 48, e: '📢', titulo: 'Publicación',  desc: '¡Listo! Tu historia ya está publicada y trabajando para atraer clientes.', color: '#833AB4' },
-        { t: 58, e: '💰', titulo: '¡Venta!',      desc: 'El cliente ve tu historia, hace clic y te escribe directo al WhatsApp para comprar.', color: '#FFD600' },
+        { t: 58, e: '💰', titulo: '¡Venta!',      desc: 'El cliente ve tu historia, hace clic y te escribe directo para comprar.', color: '#FFD600' },
     ];
 
-    let actual = 0;
+    let actual = -1;
 
-    // Crear barras dinámicamente
+    // Crear barras
     const barrasCont = document.getElementById('barras');
     pasos.forEach(() => {
         const s = document.createElement('div');
@@ -190,10 +170,7 @@
 
     function actualizarPanel(i) {
         const p = pasos[i];
-        
-        // Animación simple de salida/entrada de texto
-        burbuja.style.opacity = 0.5;
-        
+        burbuja.style.opacity = 0;
         setTimeout(() => {
             document.getElementById('labelPaso').textContent = `Paso ${i + 1} de ${pasos.length}`;
             document.getElementById('emoji').textContent = p.e;
@@ -201,10 +178,9 @@
             document.getElementById('desc').textContent = p.desc;
             document.getElementById('linea').style.background = p.color;
             burbuja.style.opacity = 1;
-        }, 100);
+        }, 200);
     }
 
-    // Evento para iniciar el video
     playOverlay.addEventListener('click', () => {
         playOverlay.classList.add('oculto');
         vid.play();
@@ -220,7 +196,7 @@
             
             barras[i].classList.remove('activa', 'completa');
             
-            if (t >= nextT && nextT !== 0) {
+            if (t >= nextT && nextT > 0) {
                 barras[i].classList.add('completa');
                 relleno.style.width = '100%';
             } else if (t >= p.t) {
@@ -238,16 +214,12 @@
         });
     });
 
-    // Intentar play automático (silenciado suele funcionar)
-    window.addEventListener('load', () => {
-        actualizarPanel(0);
-        vid.play().then(() => {
-            playOverlay.classList.add('oculto');
-        }).catch(() => {
-            // Si el navegador bloquea el autoplay, el overlay queda visible para que el usuario haga click
-            console.log("Autoplay bloqueado, esperando interacción.");
-        });
+    // Forzar la velocidad después de que el video empiece a cargar
+    vid.addEventListener('play', () => {
+        vid.playbackRate = 0.75;
     });
+
+    actualizarPanel(0);
 </script>
 </body>
 </html>
