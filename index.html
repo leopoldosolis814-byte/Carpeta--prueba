@@ -8,8 +8,6 @@
         :root {
             --primary: #ff006e;
             --accent-gradient: linear-gradient(135deg, #ff006e 0%, #ffbe0b 100%);
-            /* Definimos el color del borde casi invisible (negro puro o gris muy muy oscuro) */
-            --phone-border-color: #000; 
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -26,14 +24,14 @@
             overflow: hidden;
         }
 
-        /* CONTENEDOR DE PASOS (NOTIFICACIÓN SUPERIOR) */
+        /* CONTENEDOR DE PASOS */
         .steps-wrapper {
             width: 90%;
             max-width: 380px;
             height: 85px;
             position: relative;
             z-index: 100;
-            margin-bottom: 20px;
+            margin-bottom: 25px; /* Más espacio entre pasos y celular */
         }
 
         .step-card {
@@ -60,8 +58,7 @@
 
         .step-number {
             background: var(--accent-gradient);
-            width: 42px;
-            height: 42px;
+            width: 42px; height: 42px;
             min-width: 42px;
             border-radius: 12px;
             display: flex;
@@ -78,35 +75,27 @@
             background: var(--accent-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 2px;
         }
 
         .step-info p {
             font-size: 0.85rem;
             color: rgba(255,255,255,0.7);
-            line-height: 1.2;
         }
 
-        /* MARCO DEL CELULAR (CORREGIDO: CASI INVISIBLE) */
+        /* MARCO DEL CELULAR (AJUSTADO PARA SUBIRLO) */
         .phone-frame {
             position: relative;
-            width: 92%;
-            max-width: 350px;
-            height: 75vh;
+            width: 90%;
+            max-width: 340px;
+            height: 70vh; /* Bajamos de 75 a 70 para que suba en la pantalla */
             background: #000;
-            border-radius: 40px; /* Un poco menos de radio interno */
-            
-            /* Cambios para marco invisible: grosor mínimo y color negro */
-            border: 1px solid #1a1a1a; 
-            
-            /* Mantenemos sombra pero sutil */
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.15); /* Borde casi invisible */
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            
-            /* Añadimos un pequeño padding para que el contenido no toque la "esquina invisible" */
-            padding: 5px; 
+            margin-bottom: 20px; /* Margen de seguridad inferior */
         }
 
         .video-container {
@@ -114,7 +103,6 @@
             height: 100%;
             position: relative;
             background: #000;
-            border-radius: 36px; /* Radio interno del video ajustado al frame */
             overflow: hidden;
         }
 
@@ -122,15 +110,16 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            border-radius: 38px;
         }
 
-        /* BARRA DE PROGRESO (MANTENEMOS SUBIDA PARA VISIBILIDAD) */
+        /* BARRA DE PROGRESO */
         .progress-bar {
             position: absolute;
-            bottom: 15px; /* Importante para que se vea bien en la curva */
+            bottom: 20px; /* Más arriba para que no se pegue al borde */
             left: 50%;
             transform: translateX(-50%);
-            width: 85%;
+            width: 80%;
             height: 4px;
             background: rgba(255,255,255,0.1);
             border-radius: 10px;
@@ -145,8 +134,6 @@
             animation: grow 40s linear forwards;
             box-shadow: 0 0 10px var(--primary);
         }
-
-        /* Eliminado el pseudo-elemento ::after (indicador inferior) */
 
         @keyframes grow { to { width: 100%; } }
     </style>
