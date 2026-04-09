@@ -3,262 +3,295 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tutorial Story2Action - Pro</title>
+    <title>Story2Action Premium</title>
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #ff006e, #ffbe0b);
-            --bg-color: #0a0a0a;
-            --phone-border: #1a1a1a;
+            --primary: #ff006e;
+            --secondary: #ffbe0b;
+            --accent-gradient: linear-gradient(135deg, #ff006e 0%, #ffbe0b 100%);
+            --bg-dark: #050505;
+            --glass: rgba(15, 15, 15, 0.7);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--bg-color);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-dark);
             color: white;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            /* Efecto de iluminación de fondo estilo Streaming */
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255, 0, 110, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(255, 190, 11, 0.1) 0%, transparent 40%);
         }
 
-        /* Contenedor Principal */
-        .main-container {
+        .main-layout {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 40px;
-            width: 90%;
-            max-width: 1000px;
-            position: relative;
+            gap: 80px;
+            width: 100%;
+            max-width: 1200px;
+            padding: 40px;
+            z-index: 2;
         }
 
-        /* --- MOCKUP DEL CELULAR --- */
-        .phone-mockup {
+        /* --- SMARTPHONE ULTRA REALISTA (ESTILO TITANIUM) --- */
+        .phone-wrapper {
             position: relative;
-            width: 300px;
-            height: 600px;
-            background: var(--phone-border);
-            border-radius: 40px;
-            border: 12px solid var(--phone-border);
-            box-shadow: 0 0 50px rgba(255, 0, 110, 0.2), 0 20px 40px rgba(0,0,0,0.8);
+            /* Tamaño agrandado */
+            width: 340px;
+            height: 690px;
+            padding: 8px;
+            background: #1a1a1a; /* Color del chasis */
+            border-radius: 54px;
+            box-shadow: 
+                0 0 0 2px #333, /* Borde exterior metálico */
+                0 0 40px rgba(0,0,0,1),
+                inset 0 0 10px rgba(255,255,255,0.1);
             flex-shrink: 0;
-            z-index: 5;
+            transition: transform 0.3s ease;
         }
 
-        /* Cámara frontal (Notch) */
-        .phone-mockup::before {
+        /* Reflejo metálico lateral */
+        .phone-wrapper::after {
             content: '';
             position: absolute;
-            top: 10px;
+            top: 10%;
+            left: -2px;
+            width: 4px;
+            height: 20%;
+            background: linear-gradient(transparent, rgba(255,255,255,0.2), transparent);
+            border-radius: 10px;
+        }
+
+        .screen {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            border-radius: 46px;
+            overflow: hidden;
+            border: 4px solid #000; /* Bisel ultra fino */
+        }
+
+        /* Dynamic Island */
+        .dynamic-island {
+            position: absolute;
+            top: 15px;
             left: 50%;
             transform: translateX(-50%);
-            width: 60px;
-            height: 20px;
+            width: 90px;
+            height: 25px;
             background: #000;
-            border-radius: 10px;
+            border-radius: 20px;
             z-index: 10;
         }
 
-        .video-container {
-            width: 100%;
-            height: 100%;
-            border-radius: 28px;
-            overflow: hidden;
-            background: #000;
-        }
-
-        .video-bg {
+        .video-content {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            border-radius: 42px;
         }
 
-        /* --- CONTENEDOR DE PASOS --- */
-        .steps-wrapper {
+        /* --- SECCIÓN TEXTOS (ESTILO NETFLIX/HBO) --- */
+        .steps-sidebar {
             flex-grow: 1;
+            max-width: 450px;
             position: relative;
-            height: 120px; /* Altura fija para que no salte el contenido */
+            height: 150px;
         }
 
         .step-card {
             position: absolute;
             top: 0;
             left: 0;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 20px;
+            border-radius: 24px;
+            padding: 30px;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
             opacity: 0;
-            transform: translateX(30px);
-            transition: all 0.5s ease;
-            width: 100%;
-            max-width: 400px;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
 
         .step-number {
-            background: var(--primary-gradient);
-            width: 45px;
-            height: 45px;
-            min-width: 45px;
-            border-radius: 50%;
+            background: var(--accent-gradient);
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            border-radius: 14px; /* Estilo App Icon */
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 900;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 15px rgba(255, 0, 110, 0.4);
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: #000;
         }
 
         .step-text h2 {
-            font-size: 1.1rem;
-            margin-bottom: 4px;
-            background: var(--primary-gradient);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+            background: var(--accent-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .step-text p {
-            font-size: 0.9rem;
-            color: #ccc;
-            line-height: 1.3;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
         }
 
-        /* Animaciones Sincronizadas */
-        @keyframes showStep {
-            0% { opacity: 0; transform: translateX(30px); }
-            5% { opacity: 1; transform: translateX(0); }
-            95% { opacity: 1; transform: translateX(0); }
-            100% { opacity: 0; transform: translateX(-20px); }
+        /* Clase Activa */
+        .step-card.active {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        .active-step {
-            animation: showStep 4.5s ease-in-out forwards;
-        }
-
-        /* Barra de progreso superior */
-        .progress-bar {
+        /* Barra de progreso inferior estilo reproductor */
+        .playback-bar {
             position: fixed;
-            top: 0;
+            bottom: 0;
             left: 0;
+            width: 100%;
             height: 4px;
-            background: var(--primary-gradient);
-            z-index: 100;
-            width: 0%;
-            animation: progress 36s linear forwards;
+            background: rgba(255,255,255,0.1);
+            z-index: 1000;
         }
 
-        @keyframes progress { to { width: 100%; } }
+        .playback-progress {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            box-shadow: 0 0 15px var(--primary);
+            animation: progressRun 40s linear forwards;
+        }
+
+        @keyframes progressRun {
+            to { width: 100%; }
+        }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            .main-container { flex-direction: column; gap: 20px; }
-            .phone-mockup { width: 240px; height: 480px; }
-            .steps-wrapper { width: 100%; display: flex; justify-content: center; }
-            .step-card { left: 50%; transform: translateX(-50%) translateY(20px); }
-            @keyframes showStep {
-                0% { opacity: 0; transform: translate(-50%, 20px); }
-                10% { opacity: 1; transform: translate(-50%, 0); }
-                90% { opacity: 1; transform: translate(-50%, 0); }
-                100% { opacity: 0; transform: translate(-50%, -10px); }
-            }
+        @media (max-width: 900px) {
+            .main-layout { flex-direction: column; gap: 40px; text-align: center; }
+            .phone-wrapper { width: 280px; height: 570px; }
+            .step-card { flex-direction: column; left: 50%; transform: translateX(-50%) translateY(20px); }
+            .step-card.active { transform: translateX(-50%) translateY(0); }
         }
     </style>
 </head>
 <body>
 
-    <div class="progress-bar"></div>
+    <div class="playback-bar">
+        <div class="playback-progress"></div>
+    </div>
 
-    <div class="main-container">
-        <div class="phone-mockup">
-            <div class="video-container">
-                <video class="video-bg" autoplay muted loop playsinline>
+    <main class="main-layout">
+        <div class="phone-wrapper">
+            <div class="screen">
+                <div class="dynamic-island"></div>
+                <video class="video-content" autoplay muted loop playsinline>
                     <source src="https://res.cloudinary.com/ds2udm1nc/video/upload/v1775711519/XRecorder_20260409_04_3_kuuruu.mp4" type="video/mp4">
                 </video>
             </div>
         </div>
 
-        <div class="steps-wrapper" id="steps-wrapper">
+        <div class="steps-sidebar">
             <div class="step-card" id="s1">
                 <div class="step-number">1</div>
                 <div class="step-text">
-                    <h2>WhatsApp Pack</h2>
-                    <p>Recibí el link con tu contenido exclusivo directamente.</p>
+                    <h2>Recibí el pack en WhatsApp</h2>
+                    <p>Te llega el link con tu contenido listo</p>
                 </div>
             </div>
             <div class="step-card" id="s2">
                 <div class="step-number">2</div>
                 <div class="step-text">
-                    <h2>Abrir Catálogo</h2>
-                    <p>Entrá al link para ver tus imágenes y videos listos.</p>
+                    <h2>Entrá al link</h2>
+                    <p>Accedé a tu página con las imágenes y videos</p>
                 </div>
             </div>
             <div class="step-card" id="s3">
                 <div class="step-number">3</div>
                 <div class="step-text">
-                    <h2>Descarga Directa</h2>
-                    <p>Tocá <b>"GUARDAR"</b> en la pieza que más te guste.</p>
+                    <h2>Descargá la imagen</h2>
+                    <p>Tocá "GUARDAR CONTENIDO" y elegí la que más te guste</p>
                 </div>
             </div>
             <div class="step-card" id="s4">
                 <div class="step-number">4</div>
                 <div class="step-text">
-                    <h2>Link de Venta</h2>
-                    <p>Copiá el enlace naranja para llevar clientes a tu chat.</p>
+                    <h2>Copiá el enlace</h2>
+                    <p>Tocá el botón naranja "COPIAR ENLACE"</p>
                 </div>
             </div>
             <div class="step-card" id="s5">
                 <div class="step-number">5</div>
                 <div class="step-text">
-                    <h2>Texto Creativo</h2>
-                    <p>Copiá la frase sugerida para tu sticker de Instagram.</p>
+                    <h2>Copiá el texto del sticker</h2>
+                    <p>Tocá "TEXTO STICKER" para copiar la frase</p>
                 </div>
             </div>
             <div class="step-card" id="s6">
                 <div class="step-number">6</div>
                 <div class="step-text">
-                    <h2>Subir a Stories</h2>
-                    <p>Abrí Instagram y cargá la imagen que descargaste.</p>
+                    <h2>Abrí Instagram</h2>
+                    <p>Creá una nueva historia y subí la imagen descargada</p>
                 </div>
             </div>
             <div class="step-card" id="s7">
                 <div class="step-number">7</div>
                 <div class="step-text">
-                    <h2>Vincular Enlace</h2>
-                    <p>Usá el sticker de <b>ENLACE</b> y pegá tu link.</p>
+                    <h2>Agregá el sticker de enlace</h2>
+                    <p>Buscá el sticker "ENLACE" y pegá el link</p>
                 </div>
             </div>
             <div class="step-card" id="s8">
                 <div class="step-number">8</div>
                 <div class="step-text">
-                    <h2>¡A vender!</h2>
-                    <p>Publicá y recibí pedidos directo a tu WhatsApp. 🚀</p>
+                    <h2>¡Listo! A recibir pedidos</h2>
+                    <p>Publicá y probá el link. Los pedidos llegan a tu WhatsApp 🚀</p>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <script>
-        // Sincronización manual por tiempos para asegurar precisión
-        const timings = [1500, 6000, 10500, 15000, 19500, 24000, 28500, 33000];
-        
-        timings.forEach((time, index) => {
+        const stepTimings = [1500, 6000, 10500, 15000, 19500, 24000, 28500, 33000];
+        const duration = 4000; // Cuanto tiempo se queda cada texto visible
+
+        stepTimings.forEach((time, index) => {
             setTimeout(() => {
-                // Quitar clase activa de cualquier otro
-                document.querySelectorAll('.step-card').forEach(card => {
-                    card.classList.remove('active-step');
-                });
-                // Agregar al actual
+                // Limpiar activos
+                document.querySelectorAll('.step-card').forEach(c => c.classList.remove('active'));
+                
+                // Activar actual
                 const current = document.getElementById(`s${index + 1}`);
-                if(current) current.classList.add('active-step');
+                if (current) {
+                    current.classList.add('active');
+                    
+                    // Desvanecer un poco antes del próximo paso
+                    setTimeout(() => {
+                        current.classList.remove('active');
+                    }, duration);
+                }
             }, time);
         });
     </script>
 </body>
-                </html>
+</html>
