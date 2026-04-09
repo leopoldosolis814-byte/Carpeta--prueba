@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Story2Action Ultra Slim Fixed</title>
+    <title>Story2Action Top Notification</title>
     <style>
         :root {
             --primary: #ff006e;
-            --secondary: #ffbe0b;
             --accent-gradient: linear-gradient(135deg, #ff006e 0%, #ffbe0b 100%);
             --bg-dark: #000000;
         }
@@ -23,48 +22,108 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            background-image: radial-gradient(circle at center, #111 0%, #000 100%);
+            background-image: radial-gradient(circle at center, #151515 0%, #000 100%);
         }
 
-        .container {
+        /* CONTENEDOR PRINCIPAL - Ajustado para dar espacio arriba */
+        .main-container {
             position: relative;
             width: 100%;
-            max-width: 380px; 
-            height: 82vh;
+            max-width: 360px;
+            height: 90vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            justify-content: flex-end; /* Empuja el celular hacia abajo */
+            padding-bottom: 20px;
         }
 
-        /* CELULAR ULTRA SLIM */
+        /* CONTENEDOR DE PASOS - UBICACIÓN SUPERIOR FIJA */
+        .steps-wrapper {
+            position: absolute;
+            top: 20px; /* Espacio desde el borde superior de la pantalla */
+            left: 10px;
+            right: 10px;
+            height: 80px;
+            z-index: 100;
+        }
+
+        .step-card {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            
+            /* Animación: aparece desde arriba y se desvanece */
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .step-card.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .step-number {
+            background: var(--accent-gradient);
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: #000;
+        }
+
+        .step-info h2 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .step-info p {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.2;
+        }
+
+        /* CELULAR ULTRA SLIM - Ubicado debajo del texto */
         .phone-frame {
             position: relative;
             width: 100%;
-            height: 100%;
+            height: 75%; /* Ajuste para que quepa el texto arriba */
             background: #000;
-            border-radius: 40px;
+            border-radius: 35px;
             border: 2px solid #222; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+            box-shadow: 0 0 40px rgba(0,0,0,1);
             overflow: hidden;
         }
 
         .island {
             position: absolute;
-            top: 12px;
+            top: 10px;
             left: 50%;
             transform: translateX(-50%);
-            width: 80px;
-            height: 22px;
+            width: 70px;
+            height: 20px;
             background: #000;
             border-radius: 20px;
             z-index: 30;
-        }
-
-        .video-wrapper {
-            width: 100%;
-            height: 100%;
-            position: relative;
         }
 
         video {
@@ -73,75 +132,7 @@
             object-fit: cover;
         }
 
-        /* CONTENEDOR DE PASOS EN POSICIÓN FIJA */
-        .steps-overlay {
-            position: absolute;
-            bottom: 40px; /* Ubicación fija para todos */
-            left: 0;
-            right: 0;
-            padding: 0 20px;
-            height: 100px; /* Altura para contener las tarjetas superpuestas */
-            z-index: 20;
-        }
-
-        .step-card {
-            position: absolute; /* Esto hace que todas se encimen */
-            bottom: 0;
-            left: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            padding: 18px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            
-            /* Estado inicial: invisible y abajo */
-            opacity: 0;
-            transform: translateY(15px);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            pointer-events: none;
-        }
-
-        /* Cuando la tarjeta está activa */
-        .step-card.active {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
-        }
-
-        .step-number {
-            background: var(--accent-gradient);
-            width: 42px;
-            height: 42px;
-            min-width: 42px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 1.2rem;
-            color: #000;
-        }
-
-        .step-info h2 {
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 2px;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .step-info p {
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.2;
-        }
-
+        /* BARRA DE PROGRESO INFERIOR */
         .progress-bar {
             position: absolute;
             bottom: 0;
@@ -164,103 +155,85 @@
 </head>
 <body>
 
-    <div class="container">
+    <div class="main-container">
+        <div class="steps-wrapper">
+            <div class="step-card" id="s1">
+                <div class="step-number">1</div>
+                <div class="step-info">
+                    <h2>WhatsApp Pack</h2>
+                    <p>Recibí el link con tu contenido listo.</p>
+                </div>
+            </div>
+            <div class="step-card" id="s2">
+                <div class="step-number">2</div>
+                <div class="step-info">
+                    <h2>Entrá al link</h2>
+                    <p>Accedé a tu página de contenidos.</p>
+                </div>
+            </div>
+            <div class="step-card" id="s3">
+                <div class="step-number">3</div>
+                <div class="step-info">
+                    <h2>Descargá</h2>
+                    <p>Tocá "GUARDAR" en la pieza elegida.</p>
+                </div>
+            </div>
+            <div class="step-card" id="s4">
+                <div class="step-number">4</div>
+                <div class="step-info">
+                    <h2>Copiá Enlace</h2>
+                    <p>Tocá el botón naranja "COPIAR ENLACE".</p>
+                </div>
+            </div>
+            <div class="step-card" id="s5">
+                <div class="step-number">5</div>
+                <div class="step-info">
+                    <h2>Copiá Texto</h2>
+                    <p>Copiá la frase para tu sticker.</p>
+                </div>
+            </div>
+            <div class="step-card" id="s6">
+                <div class="step-number">6</div>
+                <div class="step-info">
+                    <h2>Instagram</h2>
+                    <p>Subí la imagen a tus historias.</p>
+                </div>
+            </div>
+            <div class="step-card" id="s7">
+                <div class="step-number">7</div>
+                <div class="step-info">
+                    <h2>Sticker Enlace</h2>
+                    <p>Pegá el link en el sticker de Instagram.</p>
+                </div>
+            </div>
+            <div class="step-card" id="s8">
+                <div class="step-number">8</div>
+                <div class="step-info">
+                    <h2>¡Listo! 🚀</h2>
+                    <p>Publicá y recibí pedidos al WhatsApp.</p>
+                </div>
+            </div>
+        </div>
+
         <div class="phone-frame">
             <div class="island"></div>
-            
-            <div class="video-wrapper">
-                <video autoplay muted loop playsinline>
-                    <source src="https://res.cloudinary.com/ds2udm1nc/video/upload/v1775711519/XRecorder_20260409_04_3_kuuruu.mp4" type="video/mp4">
-                </video>
-
-                <div class="steps-overlay">
-                    <div class="step-card" id="s1">
-                        <div class="step-number">1</div>
-                        <div class="step-info">
-                            <h2>WhatsApp Pack</h2>
-                            <p>Recibí el link con tu contenido listo.</p>
-                        </div>
-                    </div>
-                    <div class="step-card" id="s2">
-                        <div class="step-number">2</div>
-                        <div class="step-info">
-                            <h2>Entrá al link</h2>
-                            <p>Accedé a tu página de contenidos.</p>
-                        </div>
-                    </div>
-                    <div class="step-card" id="s3">
-                        <div class="step-number">3</div>
-                        <div class="step-info">
-                            <h2>Descargá</h2>
-                            <p>Tocá "GUARDAR" en la pieza elegida.</p>
-                        </div>
-                    </div>
-                    <div class="step-card" id="s4">
-                        <div class="step-number">4</div>
-                        <div class="step-info">
-                            <h2>Copiá Enlace</h2>
-                            <p>Tocá el botón naranja "COPIAR ENLACE".</p>
-                        </div>
-                    </div>
-                    <div class="step-card" id="s5">
-                        <div class="step-number">5</div>
-                        <div class="step-info">
-                            <h2>Copiá Texto</h2>
-                            <p>Copiá la frase para tu sticker.</p>
-                        </div>
-                    </div>
-                    <div class="step-card" id="s6">
-                        <div class="step-number">6</div>
-                        <div class="step-info">
-                            <h2>Instagram</h2>
-                            <p>Subí la imagen a tus historias.</p>
-                        </div>
-                    </div>
-                    <div class="step-card" id="s7">
-                        <div class="step-number">7</div>
-                        <div class="step-info">
-                            <h2>Sticker Enlace</h2>
-                            <p>Pegá el link en el sticker de Instagram.</p>
-                        </div>
-                    </div>
-                    <div class="step-card" id="s8">
-                        <div class="step-number">8</div>
-                        <div class="step-info">
-                            <h2>¡Listo! 🚀</h2>
-                            <p>Publicá y recibí pedidos al WhatsApp.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="progress-bar">
-                    <div class="progress-fill"></div>
-                </div>
+            <video autoplay muted loop playsinline>
+                <source src="https://res.cloudinary.com/ds2udm1nc/video/upload/v1775711519/XRecorder_20260409_04_3_kuuruu.mp4" type="video/mp4">
+            </video>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
             </div>
         </div>
     </div>
 
     <script>
         const timings = [1500, 6000, 10500, 15000, 19500, 24000, 28500, 33000];
-        const displayDuration = 4000; // Cuánto tiempo se queda cada texto
-
+        
         timings.forEach((time, index) => {
             setTimeout(() => {
-                // Quitamos la clase active de todos para que el anterior desaparezca
                 document.querySelectorAll('.step-card').forEach(c => c.classList.remove('active'));
-                
-                // Activamos el paso actual
                 const current = document.getElementById(`s${index + 1}`);
-                if (current) {
-                    current.classList.add('active');
-                    
-                    // Opcional: Si quieres que el texto desaparezca antes de que llegue el siguiente,
-                    // puedes descomentar las siguientes líneas:
-                    /*
-                    setTimeout(() => {
-                        current.classList.remove('active');
-                    }, displayDuration);
-                    */
-                }
+                if (current) current.classList.add('active');
             }, time);
         });
     </script>
