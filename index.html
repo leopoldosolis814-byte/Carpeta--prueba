@@ -30,19 +30,19 @@
             z-index: 1;
         }
 
-        /* Gradiente inferior para que se lean los textos */
+        /* Gradiente inferior */
         .gradient-overlay {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 250px;
+            height: 200px;
             background: linear-gradient(transparent, rgba(0,0,0,0.85));
             z-index: 2;
             pointer-events: none;
         }
 
-        /* Título arriba - más chico */
+        /* Título */
         .title {
             position: fixed;
             top: 50px;
@@ -62,7 +62,7 @@
             background-clip: text;
         }
 
-        /* Barra inferior para los pasos - más compacta */
+        /* Barra inferior */
         .steps-container {
             position: fixed;
             bottom: 20px;
@@ -73,8 +73,8 @@
         }
 
         .step-bar {
-            background: rgba(0,0,0,0.8);
-            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(0,0,0,0.85);
+            border: 1px solid rgba(255,255,255,0.2);
             border-radius: 12px;
             padding: 12px 20px;
             display: flex;
@@ -83,7 +83,7 @@
             opacity: 0;
             transform: translateY(30px);
             box-shadow: 0 5px 20px rgba(0,0,0,0.5);
-            max-width: 500px;
+            max-width: 550px;
             margin: 0 auto;
         }
 
@@ -102,14 +102,14 @@
 
         .step-text h2 {
             color: #fff;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 700;
             margin-bottom: 3px;
         }
 
         .step-text p {
             color: rgba(255,255,255,0.85);
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             line-height: 1.4;
         }
 
@@ -118,53 +118,28 @@
             font-weight: bold;
         }
 
-        /* Timing de animaciones */
-        .step-bar.step-1 {
-            animation: slideUp 5s ease-out 1.5s forwards;
-        }
-
-        .step-bar.step-2 {
-            animation: slideUp 5s ease-out 7s forwards;
-        }
-
-        .step-bar.step-3 {
-            animation: slideUp 5s ease-out 12.5s forwards;
-        }
-
-        .step-bar.step-4 {
-            animation: slideUp 5s ease-out 18s forwards;
-        }
-
-        .step-bar.step-5 {
-            animation: slideUp 5s ease-out 23.5s forwards;
-        }
+        /* Timing sincronizado con el video */
+        .step-bar.step-1 { animation: slideUp 4s ease-out 1.5s forwards; }
+        .step-bar.step-2 { animation: slideUp 4s ease-out 6s forwards; }
+        .step-bar.step-3 { animation: slideUp 4s ease-out 10.5s forwards; }
+        .step-bar.step-4 { animation: slideUp 4s ease-out 15s forwards; }
+        .step-bar.step-5 { animation: slideUp 4s ease-out 19.5s forwards; }
+        .step-bar.step-6 { animation: slideUp 4s ease-out 24s forwards; }
+        .step-bar.step-7 { animation: slideUp 4s ease-out 28.5s forwards; }
+        .step-bar.step-8 { animation: slideUp 4s ease-out 33s forwards; }
 
         @keyframes fadeInDown {
-            to {
-                opacity: 1;
-            }
+            to { opacity: 1; }
         }
 
         @keyframes slideUp {
-            0% {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            10% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            90% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
+            0% { opacity: 0; transform: translateY(30px); }
+            10% { opacity: 1; transform: translateY(0); }
+            90% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-20px); }
         }
 
-        /* Indicador de grabación - más chico */
+        /* Indicador */
         .rec-indicator {
             position: fixed;
             top: 15px;
@@ -203,7 +178,7 @@
             background: linear-gradient(90deg, #ff006e, #ffbe0b);
             z-index: 100;
             width: 0%;
-            animation: progress 30s linear forwards;
+            animation: progress 40s linear forwards;
         }
 
         @keyframes progress {
@@ -212,34 +187,28 @@
     </style>
 </head>
 <body>
-    <!-- Progress bar -->
     <div class="progress-bar"></div>
 
-    <!-- Indicador de grabación -->
     <div class="rec-indicator">
         <div class="rec-dot"></div>
         GRABANDO
     </div>
 
-    <!-- Video de fondo -->
     <video class="video-bg" autoplay muted loop playsinline>
         <source src="https://res.cloudinary.com/ds2udm1nc/video/upload/v1775711519/XRecorder_20260409_04_3_kuuruu.mp4" type="video/mp4">
     </video>
 
-    <!-- Gradiente inferior -->
     <div class="gradient-overlay"></div>
 
-    <!-- Título arriba -->
     <h1 class="title">📱 Tutorial Story2Action</h1>
 
-    <!-- Pasos compactos en la parte inferior -->
     <div class="steps-container">
         <!-- Paso 1 -->
         <div class="step-bar step-1">
             <div class="step-number">1</div>
             <div class="step-text">
-                <h2>Recibí tu Pack en WhatsApp</h2>
-                <p>Te llega el link con todo listo para usar</p>
+                <h2>Recibí el pack en WhatsApp</h2>
+                <p>Te llega el link con tu contenido listo</p>
             </div>
         </div>
 
@@ -247,8 +216,8 @@
         <div class="step-bar step-2">
             <div class="step-number">2</div>
             <div class="step-text">
-                <h2>Descargá y Copiá el Enlace</h2>
-                <p>Guardá la imagen y tocá <span class="highlight">"COPIAR ENLACE"</span></p>
+                <h2>Entrá al link</h2>
+                <p>Accedé a tu página con las imágenes y videos</p>
             </div>
         </div>
 
@@ -256,8 +225,8 @@
         <div class="step-bar step-3">
             <div class="step-number">3</div>
             <div class="step-text">
-                <h2>Subí a Instagram Stories</h2>
-                <p>Abrí Instagram y agregá el sticker de <span class="highlight">"ENLACE"</span></p>
+                <h2>Descargá la imagen</h2>
+                <p>Tocá "GUARDAR CONTENIDO" y elegí la que más te guste</p>
             </div>
         </div>
 
@@ -265,8 +234,8 @@
         <div class="step-bar step-4">
             <div class="step-number">4</div>
             <div class="step-text">
-                <h2>Personalizá el Texto</h2>
-                <p>Poné algo como <span class="highlight">"PEDÍ ACÁ"</span> o <span class="highlight">"SALTATE LA FILA"</span></p>
+                <h2>Copiá el enlace</h2>
+                <p>Tocá el botón naranja <span class="highlight">"COPIAR ENLACE"</span></p>
             </div>
         </div>
 
@@ -274,8 +243,35 @@
         <div class="step-bar step-5">
             <div class="step-number">5</div>
             <div class="step-text">
-                <h2>¡Empezá a Recibir Pedidos!</h2>
-                <p>Al tocar tu link, te llegan directo a WhatsApp 🚀</p>
+                <h2>Copiá el texto del sticker</h2>
+                <p>Tocá <span class="highlight">"TEXTO STICKER"</span> para copiar la frase</p>
+            </div>
+        </div>
+
+        <!-- Paso 6 -->
+        <div class="step-bar step-6">
+            <div class="step-number">6</div>
+            <div class="step-text">
+                <h2>Abrí Instagram</h2>
+                <p>Creá una nueva historia y subí la imagen que descargaste</p>
+            </div>
+        </div>
+
+        <!-- Paso 7 -->
+        <div class="step-bar step-7">
+            <div class="step-number">7</div>
+            <div class="step-text">
+                <h2>Agregá el sticker de enlace</h2>
+                <p>Buscá el sticker "ENLACE" y pegá el link que copiaste</p>
+            </div>
+        </div>
+
+        <!-- Paso 8 -->
+        <div class="step-bar step-8">
+            <div class="step-number">8</div>
+            <div class="step-text">
+                <h2>¡Listo! A recibir pedidos</h2>
+                <p>Publicá y probá el link. Los pedidos llegan a tu WhatsApp 🚀</p>
             </div>
         </div>
     </div>
@@ -283,7 +279,7 @@
     <script>
         setTimeout(() => {
             console.log('Tutorial completado');
-        }, 30000);
+        }, 40000);
     </script>
 </body>
 </html>
