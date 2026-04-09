@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tutorial Story2Action - Cómo Vender Más</title>
+    <title>Tutorial Story2Action</title>
     <style>
         * {
             margin: 0;
@@ -13,208 +13,281 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a0b2e 0%, #0d0d0d 100%);
-            min-height: 100vh;
-            padding: 20px;
-            color: white;
+            background: #000;
+            overflow: hidden;
+            height: 100vh;
+            position: relative;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
+        /* Video de fondo */
+        .video-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            opacity: 0.5;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding: 30px 20px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
+        /* Overlay oscuro */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            z-index: 2;
         }
 
-        .main-title {
+        /* Contenedor de contenido */
+        .content {
+            position: relative;
+            z-index: 10;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+
+        /* Título */
+        .title {
+            position: absolute;
+            top: 40px;
             font-size: 2.5rem;
             font-weight: 800;
-            margin-bottom: 10px;
-            background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff);
+            color: white;
+            text-align: center;
+            text-shadow: 0 0 30px rgba(255,0,110,0.8);
+            opacity: 0;
+            animation: fadeInDown 1s ease-out forwards;
+            background: linear-gradient(45deg, #ff006e, #ffbe0b);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        .subtitle {
-            font-size: 1.2rem;
-            color: rgba(255,255,255,0.8);
-        }
-
+        /* Steps */
         .step {
-            background: rgba(255,255,255,0.08);
+            position: absolute;
+            background: rgba(0,0,0,0.85);
+            border: 3px solid rgba(255,255,255,0.3);
             border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 25px;
-            border: 2px solid rgba(255,255,255,0.1);
-            transition: all 0.3s ease;
-        }
-
-        .step:hover {
-            border-color: #ff006e;
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(255,0,110,0.3);
-        }
-
-        .step-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            gap: 15px;
+            padding: 30px 40px;
+            max-width: 700px;
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.8);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
 
         .step-number {
+            display: inline-block;
             background: linear-gradient(135deg, #ff006e, #ffbe0b);
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
+            font-size: 2rem;
             font-weight: bold;
-            flex-shrink: 0;
-        }
-
-        .step-title {
-            font-size: 1.4rem;
-            font-weight: 700;
+            margin-bottom: 15px;
             color: white;
         }
 
-        .step-content {
+        .step h2 {
+            color: #fff;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .step p {
             color: rgba(255,255,255,0.9);
-            line-height: 1.8;
-            font-size: 1.1rem;
-            padding-left: 65px;
+            font-size: 1.3rem;
+            line-height: 1.6;
         }
 
         .highlight {
             color: #ffbe0b;
             font-weight: bold;
+            font-size: 1.4rem;
         }
 
-        .emoji {
-            font-size: 1.5rem;
-            margin-left: 8px;
+        /* Timing de animaciones */
+        .step.step-1 {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            animation: stepAppear 4s ease-out 1s forwards;
         }
 
-        .video-container {
-            margin-bottom: 40px;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 3px solid rgba(255,255,255,0.2);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        .step.step-2 {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            animation: stepAppear 4s ease-out 5.5s forwards;
         }
 
-        video {
-            width: 100%;
-            display: block;
+        .step.step-3 {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            animation: stepAppear 4s ease-out 10s forwards;
         }
 
-        .cta-button {
-            display: block;
-            text-align: center;
-            background: linear-gradient(45deg, #ff006e, #8338ec);
+        .step.step-4 {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            animation: stepAppear 4s ease-out 14.5s forwards;
+        }
+
+        .step.step-5 {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            animation: stepAppear 4s ease-out 19s forwards;
+        }
+
+        @keyframes fadeInDown {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes stepAppear {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            10% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            90% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+        }
+
+        /* Indicador de grabación */
+        .rec-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ff0000;
             color: white;
-            padding: 20px;
-            border-radius: 15px;
-            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 30px;
             font-weight: bold;
-            font-size: 1.2rem;
-            margin-top: 30px;
-            box-shadow: 0 5px 20px rgba(255,0,110,0.4);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: pulse 2s infinite;
         }
 
-        @media (max-width: 600px) {
-            .main-title { font-size: 2rem; }
-            .step { padding: 20px; }
-            .step-content { 
-                padding-left: 0; 
-                font-size: 1rem;
-            }
-            .step-header {
-                flex-direction: column;
-                text-align: center;
-            }
+        .rec-dot {
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Timer */
+        .timer {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            color: white;
+            z-index: 100;
+            border: 2px solid rgba(255,255,255,0.3);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <h1 class="main-title">📱 Tutorial Story2Action</h1>
-            <p class="subtitle">Cómo activar tu pack y empezar a vender en 5 pasos simples</p>
-        </div>
-
-        <!-- Video (opcional - se puede grabar la pantalla sobre esto) -->
-        <div class="video-container">
-            <video controls poster="https://via.placeholder.com/800x450/1a0b2e/ffffff?text=Video+Tutorial">
-                <source src="https://res.cloudinary.com/ds2udm1nc/video/upload/v1775711519/XRecorder_20260409_04_3_kuuruu.mp4" type="video/mp4">
-                Tu navegador no soporta video
-            </video>
-        </div>
-
-        <!-- Pasos -->
-        <div class="step">
-            <div class="step-header">
-                <div class="step-number">1</div>
-                <h2 class="step-title">Recibí tu Pack en WhatsApp <span class="emoji">📲</span></h2>
-            </div>
-            <div class="step-content">
-                Te llega el link de tu pack personalizado. Entrá y vas a ver todas tus <span class="highlight">imágenes y videos listos</span> para descargar y usar.
-            </div>
-        </div>
-
-        <div class="step">
-            <div class="step-header">
-                <div class="step-number">2</div>
-                <h2 class="step-title">Descargá y Copiá el Enlace <span class="emoji">📥</span></h2>
-            </div>
-            <div class="step-content">
-                Guardá la imagen que más te guste. Después tocá el botón <span class="highlight">"COPIAR ENLACE"</span> (botón naranja). ¡Ese es tu link mágico de venta!
-            </div>
-        </div>
-
-        <div class="step">
-            <div class="step-header">
-                <div class="step-number">3</div>
-                <h2 class="step-title">Subí a Instagram Stories <span class="emoji">📸</span></h2>
-            </div>
-            <div class="step-content">
-                Abrí Instagram, creá una historia y subí la imagen. Agregá el sticker de <span class="highlight">"ENLACE"</span> y pegá el link que copiaste antes.
-            </div>
-        </div>
-
-        <div class="step">
-            <div class="step-header">
-                <div class="step-number">4</div>
-                <h2 class="step-title">Personalizá el Texto del Sticker <span class="emoji">✏️</span></h2>
-            </div>
-            <div class="step-content">
-                Cambiá el texto del enlace por algo atractivo como <span class="highlight">"PEDÍ ACÁ"</span> o <span class="highlight">"SALTATE LA FILA"</span>. ¡Publicá tu historia!
-            </div>
-        </div>
-
-        <div class="step">
-            <div class="step-header">
-                <div class="step-number">5</div>
-                <h2 class="step-title">¡Empezá a Recibir Pedidos! <span class="emoji">🚀</span></h2>
-            </div>
-            <div class="step-content">
-                Cuando toquen tu link, van directo a tu promo. Al tocar <span class="highlight">"PEDIR POR WHATSAPP"</span>, te llega el mensaje pre-armado. ¡A vender! <span class="emoji">🔥</span>
-            </div>
-        </div>
-
-        <a href="#" class="cta-button">✨ ¡Comenzar Ahora! ✨</a>
+    <!-- Indicador de grabación -->
+    <div class="rec-indicator">
+        <div class="rec-dot"></div>
+        GRABANDO
     </div>
+
+    <!-- Video de fondo -->
+    <video class="video-bg" autoplay muted loop playsinline>
+        <source src="https://res.cloudinary.com/ds2udm1nc/video/upload/v1775711519/XRecorder_20260409_04_3_kuuruu.mp4" type="video/mp4">
+    </video>
+
+    <!-- Overlay -->
+    <div class="overlay"></div>
+
+    <!-- Contenido -->
+    <div class="content">
+        <h1 class="title">📱 Tutorial Story2Action</h1>
+
+        <!-- Paso 1 -->
+        <div class="step step-1">
+            <div class="step-number">1</div>
+            <h2>Recibí tu Pack en WhatsApp</h2>
+            <p>Te llega el link de tu pack personalizado con todas las imágenes y videos listos para usar</p>
+        </div>
+
+        <!-- Paso 2 -->
+        <div class="step step-2">
+            <div class="step-number">2</div>
+            <h2>Descargá y Copiá el Enlace</h2>
+            <p>Guardá la imagen que más te guste y tocá el botón <span class="highlight">"COPIAR ENLACE"</span></p>
+        </div>
+
+        <!-- Paso 3 -->
+        <div class="step step-3">
+            <div class="step-number">3</div>
+            <h2>Subí a Instagram Stories</h2>
+            <p>Abrí Instagram, creá una historia y agregá el sticker de <span class="highlight">"ENLACE"</span></p>
+        </div>
+
+        <!-- Paso 4 -->
+        <div class="step step-4">
+            <div class="step-number">4</div>
+            <h2>Personalizá el Texto</h2>
+            <p>Cambiá el texto por algo como <span class="highlight">"PEDÍ ACÁ"</span> o <span class="highlight">"SALTATE LA FILA"</span></p>
+        </div>
+
+        <!-- Paso 5 -->
+        <div class="step step-5">
+            <div class="step-number">5</div>
+            <h2>¡Empezá a Recibir Pedidos!</h2>
+            <p>Al tocar tu link, llegan directo a tu WhatsApp con el mensaje pre-armado <span class="highlight">🚀</span></p>
+        </div>
+
+        <!-- Timer -->
+        <div class="timer">Duración total: ~25 segundos</div>
+    </div>
+
+    <script>
+        // Auto-cerrar después de 25 segundos (opcional)
+        setTimeout(() => {
+            // Aquí podrías agregar lo que quieras que pase al final
+            console.log('Tutorial completado');
+        }, 25000);
+    </script>
 </body>
-    </html>
+</html>
