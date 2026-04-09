@@ -31,7 +31,7 @@
             height: 85px;
             position: relative;
             z-index: 100;
-            margin-bottom: 25px; /* Más espacio entre pasos y celular */
+            margin-bottom: 25px;
         }
 
         .step-card {
@@ -82,20 +82,23 @@
             color: rgba(255,255,255,0.7);
         }
 
-        /* MARCO DEL CELULAR (AJUSTADO PARA SUBIRLO) */
+        /* MARCO DEL CELULAR (AJUSTADO CON BORDE HYPER-FINO) */
         .phone-frame {
             position: relative;
             width: 90%;
             max-width: 340px;
-            height: 70vh; /* Bajamos de 75 a 70 para que suba en la pantalla */
+            height: 70vh; /* Mantengo la altura subida para que no se corte */
             background: #000;
             border-radius: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.15); /* Borde casi invisible */
+            
+            /* BORDE HYPER-FINO */
+            border: 1px solid rgba(255, 255, 255, 0.3); 
+            
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            margin-bottom: 20px; /* Margen de seguridad inferior */
+            margin-bottom: 20px;
         }
 
         .video-container {
@@ -116,7 +119,7 @@
         /* BARRA DE PROGRESO */
         .progress-bar {
             position: absolute;
-            bottom: 20px; /* Más arriba para que no se pegue al borde */
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
             width: 80%;
