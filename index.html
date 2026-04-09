@@ -30,17 +30,29 @@
             z-index: 1;
         }
 
-        /* Título arriba */
+        /* Gradiente inferior para que se lean los textos */
+        .gradient-overlay {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 250px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.85));
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* Título arriba - más chico */
         .title {
             position: fixed;
-            top: 60px;
+            top: 50px;
             left: 0;
             right: 0;
             text-align: center;
-            font-size: 2.2rem;
+            font-size: 1.6rem;
             font-weight: 800;
             color: white;
-            text-shadow: 0 0 30px rgba(255,0,110,0.8), 2px 2px 4px rgba(0,0,0,0.8);
+            text-shadow: 0 0 20px rgba(255,0,110,0.8), 2px 2px 4px rgba(0,0,0,0.8);
             z-index: 10;
             opacity: 0;
             animation: fadeInDown 1s ease-out forwards;
@@ -48,60 +60,62 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            padding: 0 20px;
         }
 
-        /* Barra inferior para los pasos */
+        /* Barra inferior para los pasos - más compacta */
         .steps-container {
             position: fixed;
-            bottom: 0;
+            bottom: 20px;
             left: 0;
             right: 0;
             z-index: 10;
-            padding: 20px;
+            padding: 0 20px;
         }
 
         .step-bar {
-            background: rgba(0,0,0,0.9);
-            border: 2px solid rgba(255,255,255,0.2);
-            border-radius: 15px;
-            padding: 20px 30px;
-            text-align: center;
+            background: rgba(0,0,0,0.8);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
             opacity: 0;
-            transform: translateY(50px);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            transform: translateY(30px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            max-width: 500px;
+            margin: 0 auto;
         }
 
         .step-number {
-            display: inline-block;
             background: linear-gradient(135deg, #ff006e, #ffbe0b);
-            width: 45px;
-            height: 45px;
-            line-height: 45px;
+            width: 35px;
+            height: 35px;
+            min-width: 35px;
+            line-height: 35px;
             border-radius: 50%;
-            font-size: 1.5rem;
+            font-size: 1.1rem;
             font-weight: bold;
-            margin-bottom: 10px;
+            text-align: center;
             color: white;
         }
 
-        .step-bar h2 {
+        .step-text h2 {
             color: #fff;
-            font-size: 1.5rem;
-            margin-bottom: 8px;
+            font-size: 1rem;
             font-weight: 700;
+            margin-bottom: 3px;
         }
 
-        .step-bar p {
-            color: rgba(255,255,255,0.9);
-            font-size: 1.1rem;
-            line-height: 1.5;
+        .step-text p {
+            color: rgba(255,255,255,0.85);
+            font-size: 0.85rem;
+            line-height: 1.4;
         }
 
         .highlight {
             color: #ffbe0b;
             font-weight: bold;
-            font-size: 1.2rem;
         }
 
         /* Timing de animaciones */
@@ -134,7 +148,7 @@
         @keyframes slideUp {
             0% {
                 opacity: 0;
-                transform: translateY(50px);
+                transform: translateY(30px);
             }
             10% {
                 opacity: 1;
@@ -150,27 +164,27 @@
             }
         }
 
-        /* Indicador de grabación */
+        /* Indicador de grabación - más chico */
         .rec-indicator {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #ff0000;
+            top: 15px;
+            right: 15px;
+            background: rgba(255,0,0,0.9);
             color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
+            padding: 6px 12px;
+            border-radius: 15px;
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             z-index: 100;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             animation: pulse 2s infinite;
         }
 
         .rec-dot {
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             background: white;
             border-radius: 50%;
         }
@@ -180,26 +194,12 @@
             50% { opacity: 0.6; }
         }
 
-        /* Timer abajo */
-        .timer {
-            position: fixed;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.7);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.6);
-            z-index: 100;
-        }
-
         /* Progress bar */
         .progress-bar {
             position: fixed;
             top: 0;
             left: 0;
-            height: 4px;
+            height: 3px;
             background: linear-gradient(90deg, #ff006e, #ffbe0b);
             z-index: 100;
             width: 0%;
@@ -226,52 +226,61 @@
         <source src="https://res.cloudinary.com/ds2udm1nc/video/upload/v1775711519/XRecorder_20260409_04_3_kuuruu.mp4" type="video/mp4">
     </video>
 
+    <!-- Gradiente inferior -->
+    <div class="gradient-overlay"></div>
+
     <!-- Título arriba -->
     <h1 class="title">📱 Tutorial Story2Action</h1>
 
-    <!-- Pasos en la parte inferior -->
+    <!-- Pasos compactos en la parte inferior -->
     <div class="steps-container">
         <!-- Paso 1 -->
         <div class="step-bar step-1">
             <div class="step-number">1</div>
-            <h2>Recibí tu Pack en WhatsApp</h2>
-            <p>Te llega el link con todas las imágenes y videos listos para usar</p>
+            <div class="step-text">
+                <h2>Recibí tu Pack en WhatsApp</h2>
+                <p>Te llega el link con todo listo para usar</p>
+            </div>
         </div>
 
         <!-- Paso 2 -->
         <div class="step-bar step-2">
             <div class="step-number">2</div>
-            <h2>Descargá y Copiá el Enlace</h2>
-            <p>Guardá la imagen y tocá el botón <span class="highlight">"COPIAR ENLACE"</span></p>
+            <div class="step-text">
+                <h2>Descargá y Copiá el Enlace</h2>
+                <p>Guardá la imagen y tocá <span class="highlight">"COPIAR ENLACE"</span></p>
+            </div>
         </div>
 
         <!-- Paso 3 -->
         <div class="step-bar step-3">
             <div class="step-number">3</div>
-            <h2>Subí a Instagram Stories</h2>
-            <p>Abrí Instagram, creá una historia y agregá el sticker de <span class="highlight">"ENLACE"</span></p>
+            <div class="step-text">
+                <h2>Subí a Instagram Stories</h2>
+                <p>Abrí Instagram y agregá el sticker de <span class="highlight">"ENLACE"</span></p>
+            </div>
         </div>
 
         <!-- Paso 4 -->
         <div class="step-bar step-4">
             <div class="step-number">4</div>
-            <h2>Personalizá el Texto</h2>
-            <p>Cambiá el texto por algo como <span class="highlight">"PEDÍ ACÁ"</span> o <span class="highlight">"SALTATE LA FILA"</span></p>
+            <div class="step-text">
+                <h2>Personalizá el Texto</h2>
+                <p>Poné algo como <span class="highlight">"PEDÍ ACÁ"</span> o <span class="highlight">"SALTATE LA FILA"</span></p>
+            </div>
         </div>
 
         <!-- Paso 5 -->
         <div class="step-bar step-5">
             <div class="step-number">5</div>
-            <h2>¡Empezá a Recibir Pedidos!</h2>
-            <p>Al tocar tu link, llegan directo a tu WhatsApp con el mensaje pre-armado 🚀</p>
+            <div class="step-text">
+                <h2>¡Empezá a Recibir Pedidos!</h2>
+                <p>Al tocar tu link, te llegan directo a WhatsApp 🚀</p>
+            </div>
         </div>
     </div>
 
-    <!-- Timer -->
-    <div class="timer">~30 segundos</div>
-
     <script>
-        // Auto-cerrar después de 30 segundos
         setTimeout(() => {
             console.log('Tutorial completado');
         }, 30000);
