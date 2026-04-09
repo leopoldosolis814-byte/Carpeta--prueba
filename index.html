@@ -8,6 +8,7 @@
         :root {
             --primary: #ff006e;
             --accent-gradient: linear-gradient(135deg, #ff006e 0%, #ffbe0b 100%);
+            --phone-border: #1a1a1a;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -31,7 +32,7 @@
             height: 85px;
             position: relative;
             z-index: 100;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
 
         .step-card {
@@ -85,16 +86,17 @@
             line-height: 1.2;
         }
 
-        /* MARCO DEL CELULAR (LIMPIO Y ULTRA-FINO) */
+        /* MARCO DEL CELULAR CORREGIDO */
         .phone-frame {
             position: relative;
             width: 92%;
-            max-width: 370px;
-            height: 80vh;
-            background: #000;
-            border-radius: 40px;
-            border: 1px solid #333; /* Borde muy fino para no distraer */
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            max-width: 350px;
+            height: 75vh; /* Ajustado para que no toque el borde de la pantalla */
+            background: var(--phone-border);
+            border-radius: 48px; /* Radio tipo smartphone moderno */
+            border: 10px solid var(--phone-border); /* Crea el marco físico */
+            outline: 1px solid #333; /* Reflejo sutil del borde */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -105,22 +107,28 @@
             height: 100%;
             position: relative;
             background: #000;
+            border-radius: 38px; /* Bordes internos para que el video no se escape */
+            overflow: hidden;
         }
 
         video {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Cambiado a cover para llenar el marco como en tu captura */
+            object-fit: cover;
         }
 
-        /* BARRA DE PROGRESO */
+        /* BARRA DE PROGRESO (SUBIDA PARA VISIBILIDAD) */
         .progress-bar {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
+            bottom: 15px; /* Subida para que no se pierda en la curva inferior */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 85%;
             height: 4px;
             background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            z-index: 10;
         }
 
         .progress-fill {
@@ -129,6 +137,20 @@
             width: 0%;
             animation: grow 40s linear forwards;
             box-shadow: 0 0 10px var(--primary);
+        }
+
+        /* INDICADOR INFERIOR (ESTILO IPHONE) */
+        .phone-frame::after {
+            content: '';
+            position: absolute;
+            bottom: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            z-index: 5;
         }
 
         @keyframes grow { to { width: 100%; } }
