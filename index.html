@@ -2,224 +2,293 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="color-scheme" content="light only">
-    <title>Tutorial Story2Action</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial Story2Action - Cómo Vender Más</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;700&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        html, body {
-            width: 100%; height: 100%;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
             overflow: hidden;
-            background: #111; /* Fondo oscuro detrás del video */
+            height: 100vh;
+        }
+
+        /* Video de fondo */
+        .video-bg {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            opacity: 0.4;
+        }
+
+        /* Contenedor principal */
+        .container {
+            position: relative;
+            z-index: 10;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(20,0,40,0.6) 100%);
+        }
+
+        /* Título principal */
+        .main-title {
+            color: #fff;
+            font-size: 3.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(255, 0, 128, 0.5);
+            opacity: 0;
+            animation: fadeInDown 1s ease-out forwards;
+            background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #fff;
+            font-size: 1.5rem;
+            margin-bottom: 60px;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 0.5s forwards;
+            text-align: center;
+        }
+
+        /* Steps container */
+        .steps-container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        /* Cada paso */
+        .step {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px 40px;
+            margin-bottom: 25px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            opacity: 0;
+            transform: translateX(-50px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #ff006e, #ffbe0b);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            flex-shrink: 0;
+            box-shadow: 0 5px 20px rgba(255, 0, 110, 0.4);
         }
 
-        /* VIDEO AJUSTADO */
-        video {
+        .step-content h3 {
+            color: #fff;
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .step-content p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* Animaciones escalonadas */
+        .step:nth-child(1) { animation: slideIn 0.8s ease-out 1s forwards; }
+        .step:nth-child(2) { animation: slideIn 0.8s ease-out 2s forwards; }
+        .step:nth-child(3) { animation: slideIn 0.8s ease-out 3s forwards; }
+        .step:nth-child(4) { animation: slideIn 0.8s ease-out 4s forwards; }
+        .step:nth-child(5) { animation: slideIn 0.8s ease-out 5s forwards; }
+
+        /* Highlight para elementos importantes */
+        .highlight {
+            background: linear-gradient(120deg, #ff006e 0%, #ffbe0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+        }
+
+        .emoji {
+            font-size: 2rem;
+            margin-left: 10px;
+        }
+
+        /* Animaciones */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-title { font-size: 2.5rem; }
+            .subtitle { font-size: 1.2rem; }
+            .step { 
+                flex-direction: column; 
+                text-align: center;
+                padding: 25px;
+            }
+            .step-content h3 { font-size: 1.3rem; }
+            .step-content p { font-size: 1rem; }
+        }
+
+        /* Indicador de grabación */
+        .recording-indicator {
             position: fixed;
-            /* Dejamos un margen del 10% arriba y abajo para que no choque con la UI */
-            top: 5%; left: 5%;
-            width: 90%; height: 80%; 
-            object-fit: contain; /* Para que se vea todo el video sin recortes */
-            z-index: 1;
-            border-radius: 16px; /* Bordes redondeados para estética moderna */
+            top: 20px;
+            right: 20px;
+            background: #ff0000;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 100;
+            animation: pulse 2s infinite;
         }
 
-        /* BARRAS DE PROGRESO */
-        .barras {
-            position: fixed;
-            top: 20px; left: 20px; right: 20px;
-            display: flex; gap: 4px;
-            z-index: 10;
-        }
-
-        .barra-seg {
-            flex: 1; height: 3px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 2px; overflow: hidden;
-        }
-
-        .barra-relleno { height: 100%; width: 0%; background: #FF2D7C; }
-        .barra-seg.activa .barra-relleno { background: #FFD600; }
-        .barra-seg.completa .barra-relleno { width: 100% !important; background: #FF2D7C; }
-
-        /* PLAY OVERLAY */
-        .play-overlay {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.7);
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            gap: 14px; z-index: 20; cursor: pointer;
-            transition: opacity 0.4s;
-        }
-
-        .play-circle {
-            width: 72px; height: 72px;
-            background: linear-gradient(135deg, #FF2D7C, #FFD600);
+        .rec-dot {
+            width: 12px;
+            height: 12px;
+            background: white;
             border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 28px; color: #fff;
-            animation: pulso 2s infinite;
         }
 
-        .play-overlay span {
-            font-family: 'Syne', sans-serif;
-            font-size: 11px; font-weight: 700;
-            color: #fff; letter-spacing: 2px; text-transform: uppercase;
-        }
-
-        .play-overlay.oculto { opacity: 0; pointer-events: none; }
-
-        @keyframes pulso {
-            0%, 100% { box-shadow: 0 0 20px rgba(255,45,124,0.5); }
-            50%       { box-shadow: 0 0 40px rgba(255,45,124,0.8); }
-        }
-
-        /* BURBUJA FLOTANTE */
-        .burbuja {
-            position: fixed;
-            bottom: 30px; /* Un poco más arriba para que no tape botones del cel */
-            left: 20px; right: 20px;
-            background: #ffffff;
-            border-radius: 24px;
-            padding: 16px;
-            z-index: 15;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-            transition: opacity 0.3s ease;
-        }
-
-        .pill {
-            display: inline-flex; align-items: center; gap: 6px;
-            background: #fff0f5; border: 1.5px solid #FFD6E8;
-            border-radius: 100px; padding: 4px 12px;
-            font-size: 11px; font-weight: 700; color: #FF2D7C;
-            font-family: 'Syne', sans-serif; margin-bottom: 8px;
-        }
-
-        .pill-dot { width: 6px; height: 6px; background: #FF2D7C; border-radius: 50%; animation: parpadeo 1.5s infinite; }
-        @keyframes parpadeo { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-
-        .titulo {
-            font-family: 'Syne', sans-serif;
-            font-size: 18px; font-weight: 800; color: #111;
-            display: flex; align-items: center; gap: 8px;
-            margin-bottom: 6px;
-        }
-
-        .linea { width: 40px; height: 4px; border-radius: 2px; margin-bottom: 8px; }
-
-        .desc {
-            font-family: 'DM Sans', sans-serif;
-            font-size: 14px; line-height: 1.4; color: #444;
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
     </style>
 </head>
 <body>
 
-    <video id="vid" playsinline muted loop>
-        <source src="https://res.cloudinary.com/ds2udm1nc/video/upload/v1775641154/XRecorder_20260408_01_3_erklpv.mp4" type="video/mp4">
+    <!-- Indicador de grabación (opcional, para que sepas cuándo empezar) -->
+    <div class="recording-indicator">
+        <div class="rec-dot"></div>
+        GRABANDO
+    </div>
+
+    <!-- Video de fondo - REEMPLAZÁ EL SRC CON TU VIDEO DE CLOUDINARY -->
+    <video class="video-bg" autoplay muted loop playsinline>
+        <source src="https://res.cloudinary.com/TU_CLOUD_NAME/video/upload/TU_VIDEO_ID.mp4" type="video/mp4">
     </video>
 
-    <div class="barras" id="barras"></div>
+    <!-- Contenido -->
+    <div class="container">
+        <h1 class="main-title">📱 Tutorial Story2Action</h1>
+        <p class="subtitle">Cómo activar tu pack y empezar a vender en 5 pasos simples</p>
 
-    <div class="play-overlay" id="playOverlay">
-        <div class="play-circle">▶</div>
-        <span>Empezar tutorial lento</span>
+        <div class="steps-container">
+            <!-- Paso 1 -->
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Recibí tu Pack en WhatsApp <span class="emoji">📲</span></h3>
+                    <p>Te llega el link de tu pack personalizado. Entrá y vas a ver todas tus <span class="highlight">imágenes y videos listos</span> para descargar y usar.</p>
+                </div>
+            </div>
+
+            <!-- Paso 2 -->
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Descargá y Copiá el Enlace <span class="emoji">📥</span></h3>
+                    <p>Guardá la imagen que más te guste. Después tocá el botón <span class="highlight">"COPIAR ENLACE"</span> (botón naranja). ¡Ese es tu link mágico de venta!</p>
+                </div>
+            </div>
+
+            <!-- Paso 3 -->
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Subí a Instagram Stories <span class="emoji">📸</span></h3>
+                    <p>Abrí Instagram, creá una historia y subí la imagen. Agregá el sticker de <span class="highlight">"ENLACE"</span> y pegá el link que copiaste antes.</p>
+                </div>
+            </div>
+
+            <!-- Paso 4 -->
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Personalizá el Texto del Sticker <span class="emoji">✏️</span></h3>
+                    <p>Cambiá el texto del enlace por algo atractivo como <span class="highlight">"PEDÍ ACÁ"</span> o <span class="highlight">"SALTATE LA FILA"</span>. ¡Publicá tu historia!</p>
+                </div>
+            </div>
+
+            <!-- Paso 5 -->
+            <div class="step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <h3>¡Empezá a Recibir Pedidos! <span class="emoji">🚀</span></h3>
+                    <p>Cuando toquen tu link, van directo a tu promo. Al tocar <span class="highlight">"PEDIR POR WHATSAPP"</span>, te llega el mensaje pre-armado. ¡A vender! <span class="emoji">🔥</span></p>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="burbuja" id="burbuja">
-        <div class="pill"><span class="pill-dot"></span><span id="labelPaso">Paso 1</span></div>
-        <div class="titulo"><span id="emoji">📱</span><span id="titulo">Cargando...</span></div>
-        <div class="linea" id="linea"></div>
-        <p class="desc" id="desc">Iniciando tutorial...</p>
-    </div>
+    <script>
+        // Opcional: Pausar el video después de cierto tiempo si querés
+        // setTimeout(() => {
+        //     document.querySelector('.video-bg').pause();
+        // }, 10000);
 
-<script>
-    const vid = document.getElementById('vid');
-    const playOverlay = document.getElementById('playOverlay');
-    const burbuja = document.getElementById('burbuja');
-
-    // CONFIGURACIÓN DE VELOCIDAD (1.0 es normal, 0.75 es lento)
-    vid.playbackRate = 0.75;
-
-    const pasos = [
-        { t: 0,  e: '📱', titulo: 'Notificación', desc: 'Recibís el pack del mes con todo el contenido listo para publicar por WhatsApp.', color: '#25D366' },
-        { t: 8,  e: '👆', titulo: 'Selección',    desc: 'Entrás al link del pack y elegís el contenido de la semana para tu negocio.', color: '#0088cc' },
-        { t: 16, e: '🧲', titulo: 'El Gancho',    desc: 'Elegís la imagen o video que más se adapte a tu oferta del día.', color: '#FF9900' },
-        { t: 24, e: '⬇️', titulo: 'Preparación', desc: 'Descargás el material y copiás tu enlace de venta personalizado.', color: '#FF2D7C' },
-        { t: 34, e: '🔗', titulo: 'Vinculación',  desc: 'Subís la historia a Instagram y pegás el enlace en el sticker de link.', color: '#E1306C' },
-        { t: 48, e: '📢', titulo: 'Publicación',  desc: '¡Listo! Tu historia ya está publicada y trabajando para atraer clientes.', color: '#833AB4' },
-        { t: 58, e: '💰', titulo: '¡Venta!',      desc: 'El cliente ve tu historia, hace clic y te escribe directo para comprar.', color: '#FFD600' },
-    ];
-
-    let actual = -1;
-
-    // Crear barras
-    const barrasCont = document.getElementById('barras');
-    pasos.forEach(() => {
-        const s = document.createElement('div');
-        s.className = 'barra-seg';
-        s.innerHTML = '<div class="barra-relleno"></div>';
-        barrasCont.appendChild(s);
-    });
-
-    function actualizarPanel(i) {
-        const p = pasos[i];
-        burbuja.style.opacity = 0;
-        setTimeout(() => {
-            document.getElementById('labelPaso').textContent = `Paso ${i + 1} de ${pasos.length}`;
-            document.getElementById('emoji').textContent = p.e;
-            document.getElementById('titulo').textContent = p.titulo;
-            document.getElementById('desc').textContent = p.desc;
-            document.getElementById('linea').style.background = p.color;
-            burbuja.style.opacity = 1;
-        }, 200);
-    }
-
-    playOverlay.addEventListener('click', () => {
-        playOverlay.classList.add('oculto');
-        vid.play();
-    });
-
-    vid.addEventListener('timeupdate', () => {
-        const t = vid.currentTime;
-        const barras = document.querySelectorAll('.barra-seg');
-        
-        pasos.forEach((p, i) => {
-            const nextT = pasos[i + 1] ? pasos[i + 1].t : vid.duration;
-            const relleno = barras[i].querySelector('.barra-relleno');
-            
-            barras[i].classList.remove('activa', 'completa');
-            
-            if (t >= nextT && nextT > 0) {
-                barras[i].classList.add('completa');
-                relleno.style.width = '100%';
-            } else if (t >= p.t) {
-                barras[i].classList.add('activa');
-                let progreso = ((t - p.t) / (nextT - p.t) * 100);
-                relleno.style.width = progreso + '%';
-                
-                if (actual !== i) { 
-                    actual = i; 
-                    actualizarPanel(i); 
-                }
-            } else {
-                relleno.style.width = '0%';
-            }
+        // Opcional: Resaltar cada paso secuencialmente
+        const steps = document.querySelectorAll('.step');
+        steps.forEach((step, index) => {
+            setTimeout(() => {
+                step.style.border = '2px solid #ff006e';
+                step.style.transform = 'scale(1.02)';
+                setTimeout(() => {
+                    step.style.border = '2px solid rgba(255, 255, 255, 0.2)';
+                    step.style.transform = 'scale(1)';
+                }, 2000);
+            }, 1000 + (index * 1000));
         });
-    });
-
-    // Forzar la velocidad después de que el video empiece a cargar
-    vid.addEventListener('play', () => {
-        vid.playbackRate = 0.75;
-    });
-
-    actualizarPanel(0);
-</script>
+    </script>
 </body>
 </html>
