@@ -82,19 +82,19 @@
             color: rgba(255,255,255,0.7);
         }
 
-        /* MARCO DEL CELULAR (AJUSTADO CON BORDE HYPER-FINO) */
+        /* MARCO DEL CELULAR (BORDE MÁS NOTORIO) */
         .phone-frame {
             position: relative;
             width: 90%;
             max-width: 340px;
-            height: 70vh; /* Mantengo la altura subida para que no se corte */
+            height: 70vh; 
             background: #000;
-            border-radius: 40px;
+            border-radius: 42px;
             
-            /* BORDE HYPER-FINO */
-            border: 1px solid rgba(255, 255, 255, 0.3); 
+            /* Ajuste de visibilidad del marco */
+            border: 2px solid rgba(255, 255, 255, 0.6); 
             
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9);
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -107,13 +107,13 @@
             position: relative;
             background: #000;
             overflow: hidden;
+            border-radius: 36px; /* Para que el video encaje en el marco */
         }
 
         video {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 38px;
         }
 
         /* BARRA DE PROGRESO */
